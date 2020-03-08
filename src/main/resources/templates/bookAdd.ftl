@@ -2,8 +2,37 @@
 
 <@c.page>
 
-
 <form action="/books/add" method="post" >
+
+    <!--Author drop list-->
+    <div class="input-group mb-3">
+        <select class="custom-select ${(selectedWriterError??)?string('is-invalid', '')}"
+                name="selectedWriter" id="selectedWriter" required>
+            <#list writers>
+                <#if !(selectedWriter??)>
+                    <option selected disabled>Choose Author</option>
+                    <#items as writer>
+                        <option value="${writer.id}">${writer.toString()}</option>
+                    </#items>
+                <#else>
+                    <#items as writer>
+                        <option value="${writer.id}" <#if writer.id == selectedWriter.id>selected</#if> >
+                            ${writer.toString()}
+                        </option>
+                    </#items>
+                </#if>
+            </#list>
+        </select>
+        <#if selectedWriterError??>
+            <div class="invalid-feedback">
+                ${selectedWriterError}
+            </div>
+        </#if>
+        <div class="input-group-append">
+            <a class="btn btn-primary" href="/writers/add" role="button" >New</a>
+        </div>
+    </div>
+
     <!--Book Name-->
     <div class="form-group row">
         <label for="bookNameInput" class="col-md-2 col-form-label">Book name:</label>
@@ -22,12 +51,8 @@
     <!--Annotation-->
     <div class="form-group">
         <label for="annotationTextArea">Book annotation:</label>
-        <textarea class="form-control ${(annotationError??)?string('is-invalid', '')}" name="annotation"
-                  id="annotationTextArea" placeholder="Book annotation" rows="3" >
-        <#if book??>
-            ${book.annotation}
-        </#if></textarea>
-
+        <!--if you move it to multiple lines, you will see extra spaces and line breaks at the end of the annotation-->
+        <textarea class="form-control ${(annotationError??)?string('is-invalid', '')}" name="annotation" rows="3" id="annotationTextArea" placeholder="Book annotation"><#if book??>${book.annotation}</#if></textarea>
         <#if annotationError??>
             <div class="invalid-feedback">
                 ${annotationError}
@@ -36,30 +61,34 @@
     </div>
 
     <!--Genres-->
+    <!--Is it possible to have a normal invalid-feedback?? Try upper form-control with div instead input-->
     <div class="form-group row mx-auto">
-        <div class="btn-group ${(genresError??)?string('is-invalid', '')}" role="group">
-            <#list genres as genre>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="form-check form-check-inline">
-                            <label class="form-check-label" for="${genre}">${genre}</label>
-                            <input class="form-check-input "
-                                   name="${genre}" type="checkbox" id="${genre}"
-                                   <#if book??>
-                                   ${book.genres?seq_contains(genre)?string("checked", "")}
-                                    </#if>
-                            />
+        <input class="form-control ${(genresError??)?string('is-invalid', '')}" type="hidden" >
+            <div class="btn-group" role="group">
+                <#list genres as genre>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input "
+                                       name="${genre}" type="checkbox" id="${genre}"
+                                <#if book??>
+                                    ${book.genres?seq_contains(genre)?string("checked", "")}
+                                </#if>
+                                />
+                                <label class="form-check-label" for="${genre}">${genre}</label>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </#list>
+                </#list>
+            </div>
+        </input>
         <#if genresError??>
             <div class="invalid-feedback">
                 ${genresError}
             </div>
         </#if>
-        </div>
     </div>
+
 
     <div class="form-group row">
         <!--Publication date-->
@@ -67,6 +96,7 @@
         <div class="form-group col-md-3" >
             <input class="form-control ${(publicationDateError??)?string('is-invalid', '')}" type="date"
                    name="publicationDate" id="publicationDateInput"
+                   value="<#if book?? && book.publicationDate??>${(book.publicationDate)?string('yyyy-MM-dd')}</#if>"
             />
             <#if publicationDateError??>
                 <div class="invalid-feedback">
@@ -96,24 +126,6 @@
         </div>
 
     </div>
-
-    <!--Author drop list-->
-    <div class="input-group mb-3">
-        <select class="custom-select" name="selectedWriter" id="selectedWriter" required>
-            <option selected disabled>Choose Author</option>
-            <!--Проход по авторам!-->
-            <#list writers as writer>
-                <option name="${writer.id}">${writer.toString()}</option>
-            </#list>
-        </select>
-        <div class="invalid-feedback">
-            Please, select an author or create a new one
-        </div>
-        <div class="input-group-append">
-            <a class="btn btn-primary" href="/writers/add" role="button" >New</a>
-        </div>
-    </div>
-
 
     <!--Buttons-->
     <div class="form-group row mx-auto">

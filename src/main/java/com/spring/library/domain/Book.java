@@ -1,6 +1,7 @@
 package com.spring.library.domain;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -24,7 +25,9 @@ public class Book {
     @Length(max = 2048, message = "Annotation too long")
     private String annotation;
 
+
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "publication_date")
     private Date publicationDate;
 

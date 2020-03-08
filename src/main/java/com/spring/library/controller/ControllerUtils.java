@@ -1,4 +1,4 @@
-package com.spring.library.Controller;
+package com.spring.library.controller;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

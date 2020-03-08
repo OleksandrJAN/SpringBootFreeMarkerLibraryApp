@@ -1,8 +1,8 @@
 <#import "parts/common.ftl" as c>
 <#include "parts/security.ftl">
 
-<@c.page>
 
+<@c.page>
 
 <div class="form-group row">
     <div class="col-sm-1 col-form-label">
@@ -29,7 +29,7 @@
     <tbody>
     <#list books as book>
     <tr>
-        <td><a href="/books/${book.id}}">${book.name}</a></td>
+        <td><a href="/books/${book.id}">${book.name}</a></td>
         <td>${book.writer.toString()}</td>
         <td>
             <#list book.genres as genre>${genre}<#sep>, </#list>

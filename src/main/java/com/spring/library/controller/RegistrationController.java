@@ -1,4 +1,4 @@
-package com.spring.library.Controller;
+package com.spring.library.controller;
 
 import com.spring.library.domain.User;
 import com.spring.library.service.RegistrationService;

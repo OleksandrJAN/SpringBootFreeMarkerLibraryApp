@@ -1,7 +1,8 @@
-package com.spring.library.Controller;
+package com.spring.library.controller;
 
 import com.spring.library.domain.Book;
 import com.spring.library.domain.Genre;
+import com.spring.library.domain.Writer;
 import com.spring.library.service.BookService;
 import com.spring.library.service.WriterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -36,7 +34,7 @@ public class BookController {
 
 
     @GetMapping
-    public String getBooksList(Model model) {
+    public String getBookList(Model model) {
         model.addAttribute("books", bookService.getBookList());
         return "bookList";
     }
@@ -62,20 +60,33 @@ public class BookController {
             @Valid Book book,
             BindingResult bindingResult,
             Model model,
-            @RequestParam Map<String, String> form
-            /*@RequestParam("selectedWriter") Writer writer*/
-            ) throws IOException {
-        Set<String> allGenres = Arrays.stream(Genre.values())
-                .map(Genre::name)
-                .collect(Collectors.toSet());
-
-        Set<Genre> selectedGenres = new HashSet<>();
-        for (String genreName : form.keySet()) {
-            if (allGenres.contains(genreName)) {
-                selectedGenres.add(Genre.valueOf(genreName));
-            }
+            @RequestParam Map<String, String> form,
+            @RequestParam(name = "selectedWriter", required = false) Writer writer
+    ) throws IOException {
+        Set<Genre> selectedGenres = bookService.getSelectedGenresFromForm(form);
+        boolean isCorrectGenres = !selectedGenres.isEmpty();
+        if (!isCorrectGenres) {
+            model.addAttribute("genresError", "Please, select a book genres");
         }
 
+        boolean isWriterSelected = writer != null;
+        if (isWriterSelected) {
+            model.addAttribute("selectedWriter", writer);
+        } else {
+            model.addAttribute("selectedWriterError", "Please, select an author or create a new one");
+        }
+
+        boolean isPublicationDateSelected = book.getPublicationDate() != null;
+        if (!isPublicationDateSelected) {
+            model.addAttribute("publicationDateError", "Please, select the publication date");
+        }
+
+//        boolean isCorrectPoster (request param multipart file!!!)
+        /*if (isNotPoster) {
+            model.addAttribute("posterFileError", "There are must be poster file");
+            isAnyError = true;
+
+        }*/
 
         boolean isBindingResultHasErrors = bindingResult.hasErrors();
         if (isBindingResultHasErrors) {
@@ -83,28 +94,19 @@ public class BookController {
             model.mergeAttributes(errorsMap);
         }
 
-
-
-        /*if (isNotPoster) {
-            model.addAttribute("posterFileError", "There are must be poster file");
-            isAnyError = true;
-
-        }*/
-        boolean isCorrectGenres = !selectedGenres.isEmpty();
-        boolean noError = isCorrectGenres && !isBindingResultHasErrors;
+        boolean noError = isCorrectGenres && isWriterSelected && isPublicationDateSelected
+                && !isBindingResultHasErrors;
 
         if (noError) {
 //            bookService.addNewBook(book, posterFile, publicationDate, writer, genresSet);
 
-            return "redirect:/bookList";
+//            return "redirect:/books";
         }
 
         book.setGenres(selectedGenres);
+        book.setWriter(writer);
         model.addAttribute("book", book);
 
         return getBookAddPage(model);
-//        model.addAttribute("genres", Genre.values());
-//        model.addAttribute("writers", writerService.getWriterList());
-//        return "bookAdd";
     }
 }

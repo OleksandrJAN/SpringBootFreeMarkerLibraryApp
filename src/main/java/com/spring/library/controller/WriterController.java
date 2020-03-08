@@ -1,7 +1,5 @@
-package com.spring.library.Controller;
+package com.spring.library.controller;
 
-import com.spring.library.domain.Book;
-import com.spring.library.domain.Genre;
 import com.spring.library.domain.Writer;
 import com.spring.library.service.WriterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +7,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/writers")
@@ -28,7 +24,7 @@ public class WriterController {
 
 
     @GetMapping
-    public String getWritersList(Model model) {
+    public String getWriterList(Model model) {
         model.addAttribute("writers", writerService.getWriterList());
         return "writerList";
     }
@@ -36,7 +32,7 @@ public class WriterController {
     @GetMapping("{writer}")
     public String getBookPage(@PathVariable Writer writer, Model model) {
         model.addAttribute("writer", writer);
-        return "book";
+        return "writer";
     }
 
 
@@ -69,6 +65,6 @@ public class WriterController {
             return getWriterAddPage(model);
         }
 
-        return "redirect:/writerList";
+        return "redirect:/writers";
     }
 }

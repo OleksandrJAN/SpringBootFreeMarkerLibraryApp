@@ -23,6 +23,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/books">Books</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/writers">Writers</a>
+                </li>
                 <#if isAdmin>
                     <li class="nav-item">
                         <a class="nav-link" href="/users">User list</a>

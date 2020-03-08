@@ -41,15 +41,15 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateUserRoles(User user, Map<String, String> form) {
-        Set<String> roles = Arrays.stream(Role.values())
+        Set<String> rolesName = Arrays.stream(Role.values())
                 .map(Role::name)
                 .collect(Collectors.toSet());
 
         user.getRoles().clear();
 
-        for (String key : form.keySet()) {
-            if (roles.contains(key)) {
-                user.getRoles().add(Role.valueOf(key));
+        for (String roleName : rolesName) {
+            if (form.containsKey(roleName)) {
+                user.getRoles().add(Role.valueOf(roleName));
             }
         }
 

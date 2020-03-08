@@ -4,6 +4,7 @@ import com.spring.library.domain.Book;
 import com.spring.library.domain.Genre;
 import com.spring.library.domain.Writer;
 import com.spring.library.repos.BookRepo;
+import com.spring.library.repos.WriterRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,40 @@ public class BookService {
     @Autowired
     private BookRepo bookRepo;
 
+    @Autowired
+    private WriterRepo writerRepo;
+
 
     public List<Book> getBookList() {
         return bookRepo.findAll();
     }
+
+    public Set<Genre> getSelectedGenresFromForm(Map<String, String> form) {
+        Set<String> allGenres = Arrays.stream(Genre.values())
+                .map(Genre::name)
+                .collect(Collectors.toSet());
+
+        Set<Genre> selectedGenres = new HashSet<>();
+        for (String genreName : allGenres) {
+            if (form.containsKey(genreName)) {
+                selectedGenres.add(Genre.valueOf(genreName));
+            }
+        }
+
+        return selectedGenres;
+    }
+
+    public void getSelectedWriter(Map<String, String> form) {
+
+        String writer = form.get("selectedWriter");
+        writer.toLowerCase();
+
+    }
+
+
+
+
+
 
     public void addNewBook(Book book, MultipartFile posterFile, Date publicationDate,
                            Writer writer, Set<String> genresSet) throws IOException {

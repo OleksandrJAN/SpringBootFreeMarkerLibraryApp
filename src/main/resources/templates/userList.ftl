@@ -15,16 +15,16 @@
 
     <tbody>
     <#list users as user>
-    <tr>
-        <td>${user.id}</td>
-        <td>${user.username}</td>
-        <td>
-            <#list user.roles as role>${role}<#sep>, </#list>
-        </td>
-        <td>
-            <button class="btn btn-primary" type="button" onclick="window.location.href='/users/${user.id}'">Edit</button>
-        </td>
-    </tr>
+        <tr>
+            <td>${user.id}</td>
+            <td>${user.username}</td>
+            <td>
+                <#list user.roles as role>${role}<#sep>, </#list>
+            </td>
+            <td>
+                <button class="btn btn-primary" type="button" onclick="window.location.href='/users/${user.id}'">Edit</button>
+            </td>
+        </tr>
     </#list>
     </tbody>
 </table>

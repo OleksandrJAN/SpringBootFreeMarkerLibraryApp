@@ -7,13 +7,13 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
-// затестить добавление файла в форме + добавление нового автора кнопкой New (prior)
+// затестить добавление файла в форме (prior)
+// при плохой валидации автора книги кнопка New слетает вниз (idk)
 
-// почему-то не работает success alert при успешной регистрации(no prior)
 
 // добавить 3 поля в профиле(1 для старого пароля и 2 для нового с повторением) (no prior)
 
-//cloudinary
+// cloudinary
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
