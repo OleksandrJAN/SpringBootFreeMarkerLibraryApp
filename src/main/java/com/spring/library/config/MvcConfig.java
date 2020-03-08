@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 // затестить добавление файла в форме (prior)
-// при плохой валидации автора книги кнопка New слетает вниз (idk)
+// при плохой валидации автора книги кнопка New слетает вниз (idk how to fix it)
 
 
 // добавить 3 поля в профиле(1 для старого пароля и 2 для нового с повторением) (no prior)
