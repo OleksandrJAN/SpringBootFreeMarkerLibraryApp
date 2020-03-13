@@ -29,7 +29,7 @@
     <tbody>
     <#list books as book>
     <tr>
-        <td><a href="/books/${book.id}">${book.name}</a></td>
+        <td><a href="/books/${book.id}">${book.bookName}</a></td>
         <td>${book.writer.toString()}</td>
         <td>
             <#list book.genres as genre>${genre}<#sep>, </#list>

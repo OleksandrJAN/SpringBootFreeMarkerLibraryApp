@@ -43,6 +43,14 @@ public class Book {
     private Set<Genre> genres;
 
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getBookName() {
         return bookName;
     }

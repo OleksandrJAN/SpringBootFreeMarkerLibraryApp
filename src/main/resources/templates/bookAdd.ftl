@@ -2,12 +2,12 @@
 
 <@c.page>
 
-<form action="/books/add" method="post" >
+<form action="/books/add" method="post" enctype="multipart/form-data">
 
     <!--Author drop list-->
     <div class="input-group mb-3">
         <select class="custom-select ${(selectedWriterError??)?string('is-invalid', '')}"
-                name="selectedWriter" id="selectedWriter" required>
+                name="selectedWriter" id="selectedWriter">
             <#list writers>
                 <#if !(selectedWriter??)>
                     <option selected disabled>Choose Author</option>
@@ -23,14 +23,14 @@
                 </#if>
             </#list>
         </select>
+        <div class="input-group-append">
+            <a class="btn btn-primary" href="/writers/add" role="button" >New</a>
+        </div>
         <#if selectedWriterError??>
             <div class="invalid-feedback">
                 ${selectedWriterError}
             </div>
         </#if>
-        <div class="input-group-append">
-            <a class="btn btn-primary" href="/writers/add" role="button" >New</a>
-        </div>
     </div>
 
     <!--Book Name-->
@@ -61,9 +61,8 @@
     </div>
 
     <!--Genres-->
-    <!--Is it possible to have a normal invalid-feedback?? Try upper form-control with div instead input-->
     <div class="form-group row mx-auto">
-        <input class="form-control ${(genresError??)?string('is-invalid', '')}" type="hidden" >
+        <div class="form-control ${(genresError??)?string('is-invalid', '')}">
             <div class="btn-group" role="group">
                 <#list genres as genre>
                     <div class="input-group">
@@ -81,14 +80,13 @@
                     </div>
                 </#list>
             </div>
-        </input>
+        </div>
         <#if genresError??>
             <div class="invalid-feedback">
                 ${genresError}
             </div>
         </#if>
     </div>
-
 
     <div class="form-group row">
         <!--Publication date-->
@@ -106,6 +104,7 @@
         </div>
 
         <!--File Chooser-->
+        <!--Bootstrap invalid feedback does not work-->
         <div class="form-group col-md-7">
             <div class="input-group">
                 <div class="input-group-prepend">
@@ -113,16 +112,16 @@
                 </div>
                 <div class="custom-file">
                     <label class="custom-file-label" for="posterFile">Choose file</label>
-                    <input class="custom-file-input ${(posterFileError??)?string('is-invalid', '')}"
-                           type="file" name="posterFile"  id="posterFile" aria-describedby="posterFileAddon"
+                    <input class="custom-file-input" type="file" name="posterFile"
+                           id="posterFile" aria-describedby="posterFileAddon"
                     />
-                    <#if posterFileError??>
-                        <div class="invalid-feedback">
-                            ${posterFileError}
-                        </div>
-                    </#if>
                 </div>
             </div>
+            <#if posterFileError??>
+                <div class="invalid-feedback d-block">
+                    ${posterFileError}
+                </div>
+            </#if>
         </div>
 
     </div>
@@ -133,9 +132,9 @@
         <a class="btn btn-primary align-self-end ml-auto" href="/books" role="button">Back</a>
     </div>
 
-
     <input type="hidden" name="_csrf" value="${_csrf.token}" />
 
 </form>
 
 </@c.page>
+

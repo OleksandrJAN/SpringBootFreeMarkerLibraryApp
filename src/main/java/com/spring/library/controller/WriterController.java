@@ -49,19 +49,17 @@ public class WriterController {
             BindingResult bindingResult,
             Model model
     ) {
-        boolean isBindingResultHasErrors = bindingResult.hasErrors();
-        if (isBindingResultHasErrors) {
+        model.addAttribute("writer", writer);
+
+        if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
 
             model.mergeAttributes(errorsMap);
-            model.addAttribute("writer", writer);
-
             return getWriterAddPage(model);
         }
 
         if (!writerService.addNewWriter(writer)) {
             model.addAttribute("writerError", "Writer already exists");
-            model.addAttribute("writer", writer);
             return getWriterAddPage(model);
         }
 

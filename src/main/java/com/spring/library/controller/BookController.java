@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -22,9 +24,6 @@ import java.util.Set;
 @Controller
 @RequestMapping("/books")
 public class BookController {
-
-    @Value("${upload.path}")
-    private String uploadPath;
 
     @Autowired
     private BookService bookService;
@@ -61,8 +60,9 @@ public class BookController {
             BindingResult bindingResult,
             Model model,
             @RequestParam Map<String, String> form,
-            @RequestParam(name = "selectedWriter", required = false) Writer writer
-    ) throws IOException {
+            @RequestParam(name = "selectedWriter", required = false) Writer writer,
+            @RequestParam(name = "posterFile") MultipartFile posterFile
+            ) {
         Set<Genre> selectedGenres = bookService.getSelectedGenresFromForm(form);
         boolean isCorrectGenres = !selectedGenres.isEmpty();
         if (!isCorrectGenres) {
@@ -81,12 +81,14 @@ public class BookController {
             model.addAttribute("publicationDateError", "Please, select the publication date");
         }
 
-//        boolean isCorrectPoster (request param multipart file!!!)
-        /*if (isNotPoster) {
-            model.addAttribute("posterFileError", "There are must be poster file");
-            isAnyError = true;
+        boolean isCorrectPoster = !StringUtils.isEmpty(posterFile.getOriginalFilename()) && bookService.isImage(posterFile);
+        String posterFilename = "";
 
-        }*/
+        if (isCorrectPoster) {
+            posterFilename = bookService.getPosterFilename(posterFile);
+        } else {
+            model.addAttribute("posterFileError", "There are must be correct poster file");
+        }
 
         boolean isBindingResultHasErrors = bindingResult.hasErrors();
         if (isBindingResultHasErrors) {
@@ -94,18 +96,27 @@ public class BookController {
             model.mergeAttributes(errorsMap);
         }
 
-        boolean noError = isCorrectGenres && isWriterSelected && isPublicationDateSelected
-                && !isBindingResultHasErrors;
-
-        if (noError) {
-//            bookService.addNewBook(book, posterFile, publicationDate, writer, genresSet);
-
-//            return "redirect:/books";
-        }
-
         book.setGenres(selectedGenres);
         book.setWriter(writer);
+        book.setFilename(posterFilename);
         model.addAttribute("book", book);
+
+        boolean anyError = !isCorrectGenres || !isWriterSelected || !isPublicationDateSelected ||
+                !isCorrectPoster || isBindingResultHasErrors;
+        if (!anyError) {
+            try {
+                bookService.loadPosterFile(posterFile, posterFilename);
+
+                if (bookService.addNewBook(book)) {
+                    return "redirect:/books";
+                } else {
+                    model.addAttribute("bookError", "Book already exists");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("posterFileError", "Incorrect file");
+            }
+        }
 
         return getBookAddPage(model);
     }

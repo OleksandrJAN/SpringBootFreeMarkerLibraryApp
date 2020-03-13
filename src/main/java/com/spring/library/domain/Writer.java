@@ -20,7 +20,7 @@ public class Writer {
     @Column(name = "last_name")
     private String lastName;
 
-    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Book> books;
 
 

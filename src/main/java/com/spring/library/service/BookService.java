@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -24,9 +25,11 @@ public class BookService {
     @Autowired
     private BookRepo bookRepo;
 
-    @Autowired
-    private WriterRepo writerRepo;
 
+    private boolean isBookExists(Book book) {
+        Book bookFromDb = bookRepo.findByBookNameAndWriter(book.getBookName(), book.getWriter());
+        return bookFromDb != null;
+    }
 
     public List<Book> getBookList() {
         return bookRepo.findAll();
@@ -47,52 +50,37 @@ public class BookService {
         return selectedGenres;
     }
 
-    public void getSelectedWriter(Map<String, String> form) {
-
-        String writer = form.get("selectedWriter");
-        writer.toLowerCase();
-
+    public String getPosterFilename(MultipartFile posterFile) {
+        String uuidFile = UUID.randomUUID().toString();
+        return uuidFile + "." + posterFile.getOriginalFilename();
     }
 
 
+    public boolean addNewBook(Book book) {
+        if (isBookExists(book)) {
+            return false;
+        }
 
-
-
-
-    public void addNewBook(Book book, MultipartFile posterFile, Date publicationDate,
-                           Writer writer, Set<String> genresSet) throws IOException {
-        setBookPosterFile(book, posterFile);
-        setBookGenres(book, genresSet);
-        setBookWriter(book, writer);
-        book.setPublicationDate(publicationDate);
+        book.getWriter().getBooks().add(book);
         bookRepo.save(book);
+        return true;
     }
 
-    private void setBookPosterFile(Book book, MultipartFile posterFile) throws IOException {
+    public void loadPosterFile(MultipartFile file, String resultFilename) throws IOException {
         File uploadDir = new File(uploadPath);
-
         if (!uploadDir.exists()) {
             uploadDir.mkdir();
         }
 
-        String uuidFile = UUID.randomUUID().toString();
-        String resultFilename = uuidFile + "." + posterFile.getOriginalFilename();
-
-        posterFile.transferTo(new File(uploadPath + "/" + resultFilename));
-
-        book.setFilename(resultFilename);
+        file.transferTo(new File(uploadPath + "\\" + resultFilename));
     }
 
-    private void setBookGenres(Book book, Set<String> genresFromForm) {
-        for (String genreKey : genresFromForm) {
-            book.getGenres().add(Genre.valueOf(genreKey));
+    public boolean isImage(MultipartFile file) {
+        try {
+            return ImageIO.read(file.getInputStream()) != null;
+        } catch (IOException e) {
+            return  false;
         }
     }
-
-    private void setBookWriter(Book book, Writer writer) {
-        book.setWriter(writer);
-        writer.getBooks().add(book);
-    }
-
 
 }
