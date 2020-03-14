@@ -22,11 +22,11 @@ public class RegistrationService {
     private PasswordEncoder passwordEncoder;
 
 
-    public Map<String, Object> hetErrorsInPasswords(User user, String passwordConfirm) {
+    public Map<String, Object> hasErrorsInPasswords(User user, String passwordConfirm) {
         Map<String, Object> passwordErrorsMap = new HashMap<>();
 
         if (StringUtils.isEmpty(passwordConfirm)) {
-            passwordErrorsMap.put("password2Error", "Password confirmation cannot be empty");
+            passwordErrorsMap.put("passwordConfirmationError", "Password confirmation cannot be empty");
         }
 
         String userPassword = user.getPassword();

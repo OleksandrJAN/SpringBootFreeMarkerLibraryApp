@@ -41,7 +41,7 @@ public class RegistrationController {
             model.mergeAttributes(errorsMap);
         }
 
-        Map<String, Object> passwordsErrorsMap = registrationService.hetErrorsInPasswords(newUser, passwordConfirm);
+        Map<String, Object> passwordsErrorsMap = registrationService.hasErrorsInPasswords(newUser, passwordConfirm);
         boolean isPasswordErrors = !passwordsErrorsMap.isEmpty();
         if (isPasswordErrors) {
             model.mergeAttributes(passwordsErrorsMap);

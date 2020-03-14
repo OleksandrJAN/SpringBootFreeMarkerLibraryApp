@@ -2,9 +2,7 @@ package com.spring.library.service;
 
 import com.spring.library.domain.Book;
 import com.spring.library.domain.Genre;
-import com.spring.library.domain.Writer;
 import com.spring.library.repos.BookRepo;
-import com.spring.library.repos.WriterRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -61,7 +59,6 @@ public class BookService {
             return false;
         }
 
-        book.getWriter().getBooks().add(book);
         bookRepo.save(book);
         return true;
     }
@@ -79,7 +76,7 @@ public class BookService {
         try {
             return ImageIO.read(file.getInputStream()) != null;
         } catch (IOException e) {
-            return  false;
+            return false;
         }
     }
 

@@ -1,7 +1,7 @@
 package com.spring.library.controller;
 
 import com.spring.library.domain.User;
-import com.spring.library.service.UserService;
+import com.spring.library.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
 
     @Autowired
-    private UserService userService;
+    private ProfileService profileService;
 
 
     @GetMapping
@@ -25,11 +27,22 @@ public class ProfileController {
         return "profile";
     }
 
-    // добавить логику(возиожно добавить переименование для пользователя)
-    // redirect:/profile
     @PostMapping
-    public String updateUserProfile(@AuthenticationPrincipal User user, @RequestParam String password) {
-        userService.updateUserProfile(user, password);
-        return "redirect:/messages";
+    public String updateUserProfile(@AuthenticationPrincipal User user,
+                                    @RequestParam("currentPassword") String currentPasswordConfirmation,
+                                    @RequestParam("newPassword") String newPassword,
+                                    @RequestParam("retypedPassword") String newPasswordConfirmation,
+                                    Model model
+    ) {
+        Map<String, Object> passwordErrorMap = profileService.checkErrorsInPasswords(user, currentPasswordConfirmation,
+                newPassword, newPasswordConfirmation);
+        if (passwordErrorMap.isEmpty()) {
+            profileService.updateUserProfile(user, newPassword);
+            return  "redirect:/";
+//            return "redirect:/logout";
+        }
+
+        model.mergeAttributes(passwordErrorMap);
+        return getUserProfilePage(user, model);
     }
 }

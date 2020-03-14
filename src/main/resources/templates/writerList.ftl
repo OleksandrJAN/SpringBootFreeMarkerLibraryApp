@@ -21,14 +21,18 @@
         <tr>
             <th scope="col">First name</th>
             <th scope="col">Last name</th>
+            <th scope="col">Books</th>
         </tr>
     </thead>
 
     <tbody>
     <#list writers as writer>
         <tr>
-            <td>${writer.firstName}</td>
+            <td><a href="/writers/${writer.id}">${writer.firstName}</a></td>
             <td>${writer.lastName}</td>
+            <td>
+                <#list writer.books as book>${book.bookName}<#sep>, </#list>
+            </td>
         </tr>
     </#list>
     </tbody>

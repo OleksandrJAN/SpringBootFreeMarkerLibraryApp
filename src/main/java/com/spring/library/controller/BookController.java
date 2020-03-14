@@ -6,7 +6,6 @@ import com.spring.library.domain.Writer;
 import com.spring.library.service.BookService;
 import com.spring.library.service.WriterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +61,7 @@ public class BookController {
             @RequestParam Map<String, String> form,
             @RequestParam(name = "selectedWriter", required = false) Writer writer,
             @RequestParam(name = "posterFile") MultipartFile posterFile
-            ) {
+    ) {
         Set<Genre> selectedGenres = bookService.getSelectedGenresFromForm(form);
         boolean isCorrectGenres = !selectedGenres.isEmpty();
         if (!isCorrectGenres) {

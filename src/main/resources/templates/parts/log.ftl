@@ -31,9 +31,9 @@
         <div class="form-group row">
             <label  class="col-sm-2 col-form-label"> Password: </label>
             <div class="col-sm-6">
-                <input class="form-control ${(password2Error??)?string('is-invalid', '')}"
-                       type="password" name="password2" placeholder="Retype password" />
-                <#if password2Error??>
+                <input class="form-control ${(passwordConfirmationError??)?string('is-invalid', '')}"
+                       type="password" name="passwordConfirmation" placeholder="Retype password" />
+                <#if passwordConfirmationError??>
                 <div class="invalid-feedback">
                     ${password2Error}
                 </div>

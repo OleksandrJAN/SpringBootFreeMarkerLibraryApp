@@ -20,9 +20,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepo userRepo;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -56,12 +53,4 @@ public class UserService implements UserDetailsService {
         userRepo.save(user);
     }
 
-
-    public void updateUserProfile(User user, String password) {
-        if (!StringUtils.isEmpty(password)) {
-            user.setPassword(passwordEncoder.encode(password));
-        }
-
-        userRepo.save(user);
-    }
 }

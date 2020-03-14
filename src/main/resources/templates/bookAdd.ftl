@@ -52,7 +52,7 @@
     <div class="form-group">
         <label for="annotationTextArea">Book annotation:</label>
         <!--if you move it to multiple lines, you will see extra spaces and line breaks at the end of the annotation-->
-        <textarea class="form-control ${(annotationError??)?string('is-invalid', '')}" name="annotation" rows="3" id="annotationTextArea" placeholder="Book annotation"><#if book??>${book.annotation}</#if></textarea>
+        <textarea class="form-control ${(annotationError??)?string('is-invalid', '')}" name="annotation" rows="6" id="annotationTextArea" placeholder="Book annotation"><#if book??>${book.annotation}</#if></textarea>
         <#if annotationError??>
             <div class="invalid-feedback">
                 ${annotationError}
