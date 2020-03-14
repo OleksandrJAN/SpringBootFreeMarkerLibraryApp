@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/users")
@@ -39,10 +40,16 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String updateUserRoles(
             @RequestParam("userId") User user,
-            @RequestParam Map<String, String> form
+            @RequestParam Map<String, String> form,
+            Model model
     ) {
-        userService.updateUserRoles(user, form);
+        Set<Role> selectedRoles = userService.getSelectedRolesFromForm(form);
+        if (selectedRoles.isEmpty()) {
+            model.addAttribute("rolesError", "User roles cannot be empty");
+            return getUserEditPage(user, model);
+        }
 
+        userService.updateUserRoles(user, selectedRoles);
         return "redirect:/users";
     }
 

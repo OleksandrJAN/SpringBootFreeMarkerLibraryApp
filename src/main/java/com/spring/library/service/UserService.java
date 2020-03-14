@@ -37,19 +37,24 @@ public class UserService implements UserDetailsService {
         return userRepo.findAll();
     }
 
-    public void updateUserRoles(User user, Map<String, String> form) {
-        Set<String> rolesName = Arrays.stream(Role.values())
+    public Set<Role> getSelectedRolesFromForm(Map<String, String> form) {
+        Set<String> allRolesName = Arrays.stream(Role.values())
                 .map(Role::name)
                 .collect(Collectors.toSet());
 
-        user.getRoles().clear();
-
-        for (String roleName : rolesName) {
+        Set<Role> selectedRoles = new HashSet<>();
+        for (String roleName : allRolesName) {
             if (form.containsKey(roleName)) {
-                user.getRoles().add(Role.valueOf(roleName));
+                selectedRoles.add(Role.valueOf(roleName));
             }
         }
 
+        return selectedRoles;
+    }
+
+    public void updateUserRoles(User user, Set<Role> roles) {
+        user.getRoles().clear();
+        user.getRoles().addAll(roles);
         userRepo.save(user);
     }
 
