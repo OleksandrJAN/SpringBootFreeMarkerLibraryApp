@@ -34,12 +34,12 @@ public class BookService {
     }
 
     public Set<Genre> getSelectedGenresFromForm(Map<String, String> form) {
-        Set<String> allGenres = Arrays.stream(Genre.values())
+        Set<String> allGenresName = Arrays.stream(Genre.values())
                 .map(Genre::name)
                 .collect(Collectors.toSet());
 
         Set<Genre> selectedGenres = new HashSet<>();
-        for (String genreName : allGenres) {
+        for (String genreName : allGenresName) {
             if (form.containsKey(genreName)) {
                 selectedGenres.add(Genre.valueOf(genreName));
             }
@@ -69,7 +69,7 @@ public class BookService {
             uploadDir.mkdir();
         }
 
-        file.transferTo(new File(uploadPath + "\\" + resultFilename));
+        file.transferTo(new File(uploadPath + "/" + resultFilename));
     }
 
     public boolean isImage(MultipartFile file) {

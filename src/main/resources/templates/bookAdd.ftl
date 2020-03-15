@@ -24,7 +24,7 @@
             </#list>
         </select>
         <div class="input-group-append">
-            <a class="btn btn-primary" href="/writers/add" role="button" >New</a>
+            <a class="btn btn-primary" href="/writers/add" role="button">New</a>
         </div>
         <#if selectedWriterError??>
             <div class="invalid-feedback">
@@ -35,7 +35,7 @@
 
     <!--Book Name-->
     <div class="form-group row">
-        <label for="bookNameInput" class="col-md-2 col-form-label">Book name:</label>
+        <label class="col-md-2 col-form-label" for="bookNameInput">Book name:</label>
         <div class="col-md-10">
             <input class="form-control ${(bookNameError??)?string('is-invalid', '')}" value="<#if book??>${book.bookName}</#if>"
                    type="text" name="bookName" placeholder="Book name" id="bookNameInput"
@@ -51,7 +51,7 @@
     <!--Annotation-->
     <div class="form-group">
         <label for="annotationTextArea">Book annotation:</label>
-        <!--if you move it to multiple lines, you will see extra spaces and line breaks at the end of the annotation-->
+        <!--if you move it to multiple lines, you will see extra spaces and line breaks at the start of the annotation-->
         <textarea class="form-control ${(annotationError??)?string('is-invalid', '')}" name="annotation" rows="6" id="annotationTextArea" placeholder="Book annotation"><#if book??>${book.annotation}</#if></textarea>
         <#if annotationError??>
             <div class="invalid-feedback">
@@ -68,8 +68,7 @@
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input "
-                                       name="${genre}" type="checkbox" id="${genre}"
+                                <input class="form-check-input" name="${genre}" type="checkbox" id="${genre}"
                                 <#if book??>
                                     ${book.genres?seq_contains(genre)?string("checked", "")}
                                 </#if>
@@ -91,7 +90,7 @@
     <div class="form-group row">
         <!--Publication date-->
         <label for="publicationDateInput" class="col-form-label col-md-2">Publication date:</label>
-        <div class="form-group col-md-3" >
+        <div class="form-group col-md-3">
             <input class="form-control ${(publicationDateError??)?string('is-invalid', '')}" type="date"
                    name="publicationDate" id="publicationDateInput"
                    value="<#if book?? && book.publicationDate??>${(book.publicationDate)?string('yyyy-MM-dd')}</#if>"
