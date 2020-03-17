@@ -21,39 +21,27 @@
             <!--Annotation-->
             <div class="form-group row">
                 <label class="col-md-3 col-form-label" for="annotationTextArea">Book annotation:</label>
-                <!--if you move it to multiple lines, you will see extra spaces and line breaks at the start of the annotation-->
                 <div class="col">
                     <textarea readonly class="form-control" name="annotation" rows="6" id="annotationTextArea">${book.annotation}</textarea>
                 </div>
             </div>
 
-            <!--Author drop list-->
+            <!--Author-->
             <div class="form-group row">
                 <label class="col-md-3 col-form-label" for="selectedWriter">Writer:</label>
                 <div class="col">
-                    <select class="custom-select" name="selectedWriter" id="selectedWriter">
-                        <option value="${book.writer.id}" selected disabled>
-                            ${book.writer.toString()}
-                        </option>
-                    </select>
+                    <input readonly class="form-control" type="text" name="selectedWriter"
+                           value="${book.writer.toString()}" id="selectedWriter"
+                    />
                 </div>
             </div>
 
             <!--Genres-->
             <div class="form-group row">
-                <label class="col-md-3 col-form-label">Genres:</label>
+                <label class="col-md-3 col-form-label" for="bookGenres">Genres:</label>
                 <div class="col">
-                    <div class="form-control">
-                        <div class="btn-group" role="group">
-                            <#list book.genres as genre>
-                                <div class="form-check form-check-inline">
-                                    <input checked disabled class="form-check-input" type="checkbox"
-                                           name="${genre}" id="${genre}"
-                                    />
-                                    <label class="form-check-label" for="${genre}">${genre}</label>
-                                </div>
-                            </#list>
-                        </div>
+                    <div class="form-control" id="bookGenres">
+                        <#list book.genres as genre>${genre}<#sep>, </#list>
                     </div>
                 </div>
             </div>
@@ -68,6 +56,11 @@
                 </div>
             </div>
 
+            <!--Reviews-->
+            <div class="form-group">
+                <a class="btn btn-primary" href="${book.id}/reviews" role="button">Reviews</a>
+            </div>
+
         </div>
 
         <!--Poster File-->
@@ -77,10 +70,8 @@
 
     </div>
 
-    <a class="btn btn-primary" href="${book.id}/reviews" role="button">Reviews</a>
-</form>
 
-<!--Reviews-->
+</form>
 
 
 </@c.page>

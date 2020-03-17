@@ -3,24 +3,20 @@
 <@c.page>
 
 <form action="/books/add" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="${_csrf.token}" />
 
     <!--Author drop list-->
     <div class="input-group mb-3">
         <select class="custom-select ${(selectedWriterError??)?string('is-invalid', '')}"
                 name="selectedWriter" id="selectedWriter">
-            <#list writers>
-                <#if !(selectedWriter??)>
-                    <option selected disabled>Choose Author</option>
-                    <#items as writer>
-                        <option value="${writer.id}">${writer.toString()}</option>
-                    </#items>
-                <#else>
-                    <#items as writer>
-                        <option value="${writer.id}" <#if writer.id == selectedWriter.id>selected</#if> >
-                            ${writer.toString()}
-                        </option>
-                    </#items>
-                </#if>
+            <#if selectedWriter??>
+                <#assign writers = writers?filter(writer -> writer.id != selectedWriter.id)>
+                <option selected value="${selectedWriter.id}">${selectedWriter.toString()}</option>
+            <#else>
+                <option selected disabled>Choose Author</option>
+            </#if>
+            <#list writers as writer>
+                <option value="${writer.id}">${writer.toString()}</option>
             </#list>
         </select>
         <div class="input-group-append">
@@ -51,8 +47,8 @@
     <!--Annotation-->
     <div class="form-group">
         <label for="annotationTextArea">Book annotation:</label>
-        <!--if you move it to multiple lines, you will see extra spaces and line breaks at the start of the annotation-->
-        <textarea class="form-control ${(annotationError??)?string('is-invalid', '')}" name="annotation" rows="6" id="annotationTextArea" placeholder="Book annotation"><#if book??>${book.annotation}</#if></textarea>
+        <textarea class="form-control ${(annotationError??)?string('is-invalid', '')}" name="annotation" rows="6"
+                  id="annotationTextArea" placeholder="Book annotation"><#if book??>${book.annotation}</#if></textarea>
         <#if annotationError??>
             <div class="invalid-feedback">
                 ${annotationError}
@@ -69,9 +65,7 @@
                         <div class="input-group-prepend">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" name="${genre}" type="checkbox" id="${genre}"
-                                <#if book??>
-                                    ${book.genres?seq_contains(genre)?string("checked", "")}
-                                </#if>
+                                <#if book??>${book.genres?seq_contains(genre)?string("checked", "")}</#if>
                                 />
                                 <label class="form-check-label" for="${genre}">${genre}</label>
                             </div>
@@ -130,8 +124,6 @@
         <button class="btn btn-primary" type="submit">Save</button>
         <a class="btn btn-primary align-self-end ml-auto" href="/books" role="button">Back</a>
     </div>
-
-    <input type="hidden" name="_csrf" value="${_csrf.token}" />
 
 </form>
 
