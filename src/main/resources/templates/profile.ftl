@@ -15,10 +15,12 @@
     <div class="form-group row">
         <label  class="col-sm-2 col-form-label">Current password:</label>
         <div class="col-sm-6">
-            <input class="form-control <#if currentPasswordError??>is-invalid</#if>" type="password" name="currentPassword" placeholder="Password"/>
-            <#if currentPasswordError??>
+            <input class="form-control <#if currentPasswordConfirmError??>is-invalid</#if>" type="password"
+                   name="currentPasswordConfirmation" placeholder="Password"
+            />
+            <#if currentPasswordConfirmError??>
                 <div class="invalid-feedback">
-                    ${currentPasswordError}
+                    ${currentPasswordConfirmError}
                 </div>
             </#if>
         </div>
@@ -28,7 +30,9 @@
     <div class="form-group row">
         <label  class="col-sm-2 col-form-label">New password:</label>
         <div class="col-sm-6">
-            <input class="form-control <#if newPasswordError??>is-invalid</#if>" type="password" name="newPassword" placeholder="Password"/>
+            <input class="form-control <#if newPasswordError??>is-invalid</#if>" type="password"
+                   name="newPassword" placeholder="Password"
+            />
             <#if newPasswordError??>
                 <div class="invalid-feedback">
                     ${newPasswordError}
@@ -41,7 +45,8 @@
     <div class="form-group row">
         <label  class="col-sm-2 col-form-label">Retype new password:</label>
         <div class="col-sm-6">
-            <input class="form-control <#if newPasswordConfirmError??>is-invalid</#if>" type="password" name="retypedPassword" placeholder="Password"/>
+            <input class="form-control <#if newPasswordConfirmError??>is-invalid</#if>" type="password"
+                   name="newPasswordConfirmation" placeholder="Password"/>
             <#if newPasswordConfirmError??>
                 <div class="invalid-feedback">
                     ${newPasswordConfirmError}

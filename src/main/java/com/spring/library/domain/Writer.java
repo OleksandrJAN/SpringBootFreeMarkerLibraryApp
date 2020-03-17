@@ -1,5 +1,7 @@
 package com.spring.library.domain;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
@@ -13,10 +15,12 @@ public class Writer {
     private Long id;
 
     @NotBlank(message = "First name cannot be empty")
+    @Length(max = 127, message = "First name too long")
     @Column(name = "first_name")
     private String firstName;
 
     @NotBlank(message = "Last name cannot be empty")
+    @Length(max = 127, message = "Last name too long")
     @Column(name = "last_name")
     private String lastName;
 

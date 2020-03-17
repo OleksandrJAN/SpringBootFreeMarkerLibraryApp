@@ -35,11 +35,11 @@ public class ProfileService {
         Map<String, Object> passwordErrorsMap = new HashMap<>();
 
         if (StringUtils.isEmpty(currentPasswordConfirmation)) {
-            passwordErrorsMap.put("currentPasswordError", CURR_PASSWORD_EMPTY_ERROR);
+            passwordErrorsMap.put("currentPasswordConfirmError", CURR_PASSWORD_EMPTY_ERROR);
         } else {
             boolean passwordsMatches = passwordEncoder.matches(currentPasswordConfirmation, currentUser.getPassword());
             if (!passwordsMatches) {
-                passwordErrorsMap.put("currentPasswordError", CURR_PASSWORD_CONFIRM_ERROR);
+                passwordErrorsMap.put("currentPasswordConfirmError", CURR_PASSWORD_CONFIRM_ERROR);
             }
         }
 

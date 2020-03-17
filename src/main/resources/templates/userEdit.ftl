@@ -2,11 +2,11 @@
 
 <@c.page>
 
-<form action="/users" method="post">
+<form action="/users/${user.id}" method="post">
     <!--User Name-->
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="userNameInput">User name:</label>
-        <div class="col-sm-10">
+        <label class="col-md-3 col-form-label" for="userNameInput">User name:</label>
+        <div class="col">
             <input readonly class="form-control" type="text" name="username"
                    value="${user.username}" id="userNameInput"/>
         </div>
@@ -42,7 +42,6 @@
         <a class="btn btn-primary align-self-end ml-auto" href="/users" role="button">Back</a>
     </div>
 
-    <input type="hidden" name="userId" value="${user.id}" />
     <input type="hidden" name="_csrf" value="${_csrf.token}" />
 </form>
 

@@ -36,10 +36,10 @@ public class UserController {
     }
 
 
-    @PostMapping
+    @PostMapping("{user}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String updateUserRoles(
-            @RequestParam("userId") User user,
+            @PathVariable User user,
             @RequestParam Map<String, String> form,
             Model model
     ) {

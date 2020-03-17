@@ -29,9 +29,9 @@ public class ProfileController {
 
     @PostMapping
     public String updateUserProfile(@AuthenticationPrincipal User user,
-                                    @RequestParam("currentPassword") String currentPasswordConfirmation,
+                                    @RequestParam("currentPasswordConfirmation") String currentPasswordConfirmation,
                                     @RequestParam("newPassword") String newPassword,
-                                    @RequestParam("retypedPassword") String newPasswordConfirmation,
+                                    @RequestParam("newPasswordConfirmation") String newPasswordConfirmation,
                                     Model model
     ) {
         Map<String, Object> passwordErrorMap = profileService.checkErrorsInPasswords(user, currentPasswordConfirmation,
