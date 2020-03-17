@@ -5,38 +5,32 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+
 @Entity
-public class Message {
+public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Please fill the message")
-    @Length(max = 2048, message = "Message too long")
+    @NotBlank(message = "Review cannot be empty")
+    @Length(max = 2048, message = "Review too long")
     private String text;
-
-    @NotBlank(message = "Please fill the tag")
-    @Length(max = 255, message = "Tag too long")
-    private String tag;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "book_id")
+    private Book book;
 
-    public Message() {
-    }
-
-    public Message(String text, String tag, User user) {
-        this.text = text;
-        this.tag = tag;
-        this.author = user;
-    }
+    @Enumerated(EnumType.STRING)
+    private Assessment assessment;
 
 
-    public String getAuthorName(){
-        return author != null ? author.getUsername() : "UFO";
+    public String getAuthorName() {
+        return author.getUsername();
     }
 
 
@@ -56,19 +50,27 @@ public class Message {
         this.text = text;
     }
 
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
     public User getAuthor() {
         return author;
     }
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public Assessment getAssessment() {
+        return assessment;
+    }
+
+    public void setAssessment(Assessment assessment) {
+        this.assessment = assessment;
     }
 }

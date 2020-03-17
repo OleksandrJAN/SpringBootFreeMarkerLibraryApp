@@ -1,5 +1,6 @@
 package com.spring.library.domain;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,9 +18,11 @@ public class User implements UserDetails {
     private Long id;
 
     @NotBlank(message = "Username cannot be empty")
+    @Length(max = 255, message = "Username too long")
     private String username;
 
     @NotBlank(message = "Password cannot be empty")
+    @Length(max = 255, message = "Password too long")
     private String password;
 
     private boolean active;
@@ -28,6 +31,9 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Review> reviews;
 
 
     public boolean isAdmin() {
@@ -75,6 +81,14 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Set<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Set<Review> reviews) {
+        this.reviews = reviews;
     }
 
 

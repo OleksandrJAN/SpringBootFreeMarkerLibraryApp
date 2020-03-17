@@ -76,6 +76,8 @@
         </div>
 
     </div>
+
+    <a class="btn btn-primary" href="${book.id}/reviews" role="button">Reviews</a>
 </form>
 
 <!--Reviews-->

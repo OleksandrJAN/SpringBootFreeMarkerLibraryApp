@@ -31,6 +31,7 @@ public class Book {
     @Column(name = "publication_date")
     private Date publicationDate;
 
+    @Length(max = 255, message = "Poster file name too long")
     private String filename;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -41,6 +42,9 @@ public class Book {
     @CollectionTable(name = "book_genre", joinColumns = @JoinColumn(name = "book_id"))
     @Enumerated(EnumType.STRING)
     private Set<Genre> genres;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Review> reviews;
 
 
     public Long getId() {
@@ -97,6 +101,14 @@ public class Book {
 
     public void setGenres(Set<Genre> genres) {
         this.genres = genres;
+    }
+
+    public Set<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Set<Review> reviews) {
+        this.reviews = reviews;
     }
 
 }
