@@ -2,8 +2,6 @@
 
 <@c.page>
 
-<h5>List of users</h5>
-
 <table class="table table-striped">
     <thead>
         <tr>
@@ -14,18 +12,15 @@
     </thead>
 
     <tbody>
-    <#list users as user>
-        <tr>
-            <td>${user.id}</td>
-            <td>${user.username}</td>
-            <td>
-                <#list user.roles as role>${role}<#sep>, </#list>
-            </td>
-            <td>
-                <button class="btn btn-primary" type="button" onclick="window.location.href='/users/${user.id}'">Edit</button>
-            </td>
-        </tr>
-    </#list>
+        <#list users as user>
+            <tr>
+                <td>${user.id}</td>
+                <td><a href="/users/${user.id}">${user.username}</a></td>
+                <td>
+                    <#list user.roles as role>${role}<#sep>, </#list>
+                </td>
+            </tr>
+        </#list>
     </tbody>
 </table>
 
