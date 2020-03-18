@@ -15,10 +15,10 @@
             </li>
             <#if currentUser??>
                 <li class="nav-item">
-                    <a class="nav-link" href="/profile">Profile</a>
+                    <a class="nav-link" href="/books">Books</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/books">Books</a>
+                    <a class="nav-link" href="/writers">Writers</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/users/${currentUser.id}">Profile</a>
