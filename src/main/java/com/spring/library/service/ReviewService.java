@@ -15,12 +15,16 @@ public class ReviewService {
     private ReviewRepo reviewRepo;
 
 
-    public List<Review> getAllReviewsForBook(Long bookId) {
+    public List<Review> getAllBookReviews(Long bookId) {
         return reviewRepo.findByBookId(bookId);
     }
 
-    public boolean addNewReview(User user, Review review) {
-        Review reviewFromUser = reviewRepo.findByAuthorId(user.getId());
+    public List<Review> getAllUserReviews(Long userId) {
+        return reviewRepo.findByAuthorId(userId);
+    }
+
+    public boolean addNewReview(Long userId, Long bookId, Review review) {
+        Review reviewFromUser = reviewRepo.findByAuthor_IdAndBook_Id(userId, bookId);
 
         if (reviewFromUser != null) {
             return false;

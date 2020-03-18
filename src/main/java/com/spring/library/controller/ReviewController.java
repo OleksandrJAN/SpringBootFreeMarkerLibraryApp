@@ -16,21 +16,32 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/books/{bookId}/reviews")
 public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
 
-    @GetMapping
-    public String getReviewsPage(@PathVariable("bookId") Book book, Model model) {
-        model.addAttribute("reviews", reviewService.getAllReviewsForBook(book.getId()));
+
+    @GetMapping("/books/{bookId}/reviews")
+    public String getBookReviewsPage(@PathVariable("bookId") Book book, Model model) {
+        model.addAttribute("reviews", reviewService.getAllBookReviews(book.getId()));
         model.addAttribute("assessments", Assessment.values());
         model.addAttribute("book", book);
         return "reviewList";
     }
 
-    @PostMapping
+    @GetMapping("/users/{userId}/reviews")
+    public String getUserReviewsPage(@PathVariable("userId") User user, Model model) {
+        model.addAttribute("reviews", reviewService.getAllUserReviews(user.getId()));
+
+        /*NO ASSESSMENTS*/
+        model.addAttribute("assessments", Assessment.values());
+
+        model.addAttribute("user", user);
+        return "reviewList";
+    }
+
+    @PostMapping("/books/{bookId}/reviews")
     public String addNewReview(@PathVariable("bookId") Book book,
                                @AuthenticationPrincipal User user,
                                @Valid Review review,
@@ -53,7 +64,7 @@ public class ReviewController {
         if (isAssessmentSelected && !isBindingResultHasErrors) {
             review.setAuthor(user);
             review.setBook(book);
-            if (reviewService.addNewReview(user, review)) {
+            if (reviewService.addNewReview(user.getId(), book.getId(), review)) {
                 return "redirect:/books/" + book.getId() + "/reviews";
             } else {
                 model.addAttribute("reviewError", "You have already written a review of this book");
@@ -61,7 +72,7 @@ public class ReviewController {
         }
 
         model.addAttribute("review", review);
-        return getReviewsPage(book, model);
+        return getBookReviewsPage(book, model);
     }
 
 }
