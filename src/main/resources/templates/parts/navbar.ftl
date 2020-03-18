@@ -21,7 +21,7 @@
                     <a class="nav-link" href="/books">Books</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/writers">Writers</a>
+                    <a class="nav-link" href="/users/${currentUser.id}">Profile</a>
                 </li>
                 <#if isAdmin>
                     <li class="nav-item">
@@ -32,7 +32,8 @@
         </ul>
 
         <#if currentUser??>
-            <div class="navbar-text mr-3">${name}</div>
+            <div class="navbar-text mr-2">${name}</div>
+            <a class="nav-link" href="/settings">Settings</a>
             <@l.logout/>
         </#if>
 

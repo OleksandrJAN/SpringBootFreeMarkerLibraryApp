@@ -1,7 +1,7 @@
 package com.spring.library.controller;
 
 import com.spring.library.domain.User;
-import com.spring.library.service.ProfileService;
+import com.spring.library.service.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -14,35 +14,35 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/profile")
-public class ProfileController {
+@RequestMapping("/settings")
+public class SettingsController {
 
     @Autowired
-    private ProfileService profileService;
+    private SettingsService settingsService;
 
 
     @GetMapping
-    public String getUserProfilePage(@AuthenticationPrincipal User user, Model model) {
+    public String getUserSettingsPage(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("username", user.getUsername());
-        return "profile";
+        return "settings";
     }
 
     @PostMapping
-    public String updateUserProfile(@AuthenticationPrincipal User user,
-                                    @RequestParam("currentPasswordConfirmation") String currentPasswordConfirmation,
-                                    @RequestParam("newPassword") String newPassword,
-                                    @RequestParam("newPasswordConfirmation") String newPasswordConfirmation,
-                                    Model model
+    public String updateUserSettings(@AuthenticationPrincipal User user,
+                                     @RequestParam("currentPasswordConfirmation") String currentPasswordConfirmation,
+                                     @RequestParam("newPassword") String newPassword,
+                                     @RequestParam("newPasswordConfirmation") String newPasswordConfirmation,
+                                     Model model
     ) {
-        Map<String, Object> passwordErrorMap = profileService.checkErrorsInPasswords(user, currentPasswordConfirmation,
+        Map<String, Object> passwordErrorMap = settingsService.checkErrorsInPasswords(user, currentPasswordConfirmation,
                 newPassword, newPasswordConfirmation);
         if (passwordErrorMap.isEmpty()) {
-            profileService.updateUserProfile(user, newPassword);
+            settingsService.updateUserSettings(user, newPassword);
             return  "redirect:/";
 //            return "redirect:/logout";
         }
 
         model.mergeAttributes(passwordErrorMap);
-        return getUserProfilePage(user, model);
+        return getUserSettingsPage(user, model);
     }
 }

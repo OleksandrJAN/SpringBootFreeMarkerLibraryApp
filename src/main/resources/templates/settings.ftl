@@ -3,6 +3,8 @@
 <@c.page>
 
 <form method="post">
+    <input type="hidden" name="_csrf" value="${_csrf.token}" />
+
     <!--username-->
     <div class="form-group row">
         <label  class="col-sm-2 col-form-label">User name:</label>
@@ -56,8 +58,7 @@
     </div>
 
     <button class="btn btn-primary" type="submit">Save</button>
-    <input type="hidden" name="_csrf" value="${_csrf.token}" />
-</form>
 
+</form>
 
 </@c.page>

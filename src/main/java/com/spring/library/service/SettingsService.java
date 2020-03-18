@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class ProfileService {
+public class SettingsService {
     private static final String CURR_PASSWORD_EMPTY_ERROR = "Password confirmation cannot be empty";
     private static final String CURR_PASSWORD_CONFIRM_ERROR = "Password confirmation is incorrect";
 
@@ -63,7 +63,7 @@ public class ProfileService {
     }
 
 
-    public void updateUserProfile(User user, String password) {
+    public void updateUserSettings(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));
         userRepo.save(user);
     }
