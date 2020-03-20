@@ -35,4 +35,15 @@ public class ReviewService {
 
     }
 
+    public void updateUserReview(Review userReview, Review editedReview) {
+        userReview.setText(editedReview.getText());
+        userReview.setAssessment(editedReview.getAssessment());
+        reviewRepo.save(userReview);
+    }
+
+    public boolean isReviewBelongsUser(Long userId, Review review) {
+        List<Review> userReviews = reviewRepo.findByAuthorId(userId);
+        return userReviews.contains(review);
+    }
+
 }
