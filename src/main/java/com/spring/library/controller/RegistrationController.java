@@ -25,15 +25,15 @@ public class RegistrationController {
 
     @GetMapping
     public String getRegistrationPage(Model model) {
-        return "registration";
+        return "log/registration";
     }
 
     @PostMapping
     public String addUser(
             @Valid User newUser,
-            @RequestParam("password2") String passwordConfirm,
             BindingResult bindingResult,
-            Model model
+            Model model,
+            @RequestParam("passwordConfirmation") String passwordConfirm
     ) {
         boolean isBindingResultHasErrors = bindingResult.hasErrors();
         if (isBindingResultHasErrors) {
@@ -57,6 +57,6 @@ public class RegistrationController {
         }
 
         model.addAttribute("registrationSuccessful", true);
-        return "login";
+        return "log/login";
     }
 }

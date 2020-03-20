@@ -34,9 +34,9 @@
                 <input class="form-control ${(passwordConfirmationError??)?string('is-invalid', '')}"
                        type="password" name="passwordConfirmation" placeholder="Retype password" />
                 <#if passwordConfirmationError??>
-                <div class="invalid-feedback">
-                    ${password2Error}
-                </div>
+                    <div class="invalid-feedback">
+                        ${passwordConfirmationError}
+                    </div>
                 </#if>
             </div>
         </div>
