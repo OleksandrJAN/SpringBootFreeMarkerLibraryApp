@@ -1,7 +1,8 @@
-<#import "parts/common.ftl" as c>
+<#import "/parts/common.ftl" as c>
 
 <@c.page>
 
+<!--part.updateUserRoleForm-->
 <form action="/users/${user.id}" method="post">
     <!--User Name-->
     <div class="form-group row">
