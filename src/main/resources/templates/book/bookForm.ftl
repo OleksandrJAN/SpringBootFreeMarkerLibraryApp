@@ -1,9 +1,4 @@
-<#import "parts/common.ftl" as c>
-<#include "parts/security.ftl">
-
-
-<@c.page>
-
+<!--update request-->
 <form>
     <div class="form-group row">
 
@@ -70,8 +65,4 @@
 
     </div>
 
-
 </form>
-
-
-</@c.page>

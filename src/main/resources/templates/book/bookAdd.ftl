@@ -1,8 +1,8 @@
-<#import "parts/common.ftl" as c>
+<#import "/parts/common.ftl" as c>
 
 <@c.page>
 
-<form action="/books/add" method="post" enctype="multipart/form-data">
+<form action="/books" method="post" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="${_csrf.token}" />
 
     <!--Author drop list-->

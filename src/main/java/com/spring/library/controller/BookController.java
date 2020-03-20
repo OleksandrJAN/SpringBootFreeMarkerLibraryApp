@@ -6,13 +6,18 @@ import com.spring.library.domain.Writer;
 import com.spring.library.service.BookService;
 import com.spring.library.service.WriterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -21,7 +26,6 @@ import java.util.Set;
 
 
 @Controller
-@RequestMapping("/books")
 public class BookController {
 
     @Autowired
@@ -31,28 +35,32 @@ public class BookController {
     private WriterService writerService;
 
 
-    @GetMapping
+    @GetMapping("books")
     public String getBookList(Model model) {
         model.addAttribute("books", bookService.getBookList());
-        return "bookList";
+        return "book/bookList";
     }
 
-    @GetMapping("{book}")
+    @GetMapping("books/{book:[\\d]+}")
     public String getBookPage(@PathVariable Book book, Model model) {
+        if (book == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "BOOK NOT FOUND");
+        }
+
         model.addAttribute("book", book);
-        return "book";
+        return "book/bookPage";
     }
 
 
-    @GetMapping("/add")
+    @GetMapping("books/add")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String getBookAddPage(Model model) {
         model.addAttribute("genres", Genre.values());
         model.addAttribute("writers", writerService.getWriterList());
-        return "bookAdd";
+        return "book/bookAdd";
     }
 
-    @PostMapping("/add")
+    @PostMapping("books")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String addNewBook(
             @Valid Book book,

@@ -1,21 +1,19 @@
-<#import "parts/common.ftl" as c>
-<#include "parts/security.ftl">
-
+<#import "/parts/common.ftl" as c>
+<#include "/parts/security.ftl">
 
 <@c.page>
 
 <div class="form-group row">
-    <div class="col-sm-1 col-form-label">
+    <div class="col-md-1 col-form-label">
         <h5>Books</h5>
     </div>
-    <div class="col-sm-10">
+    <div class="col">
         <#if isAdmin>
             <a class="btn btn-primary" href="/books/add">Add new book</a>
         </#if>
     </div>
 </div>
 
-<!--Форма поиска книги-->
 
 <table class="table table-striped">
     <thead>
