@@ -1,11 +1,10 @@
-<#import "parts/common.ftl" as c>
+<#import "/parts/common.ftl" as c>
+<#import "/parts/alerts.ftl" as alert>
 
 <@c.page>
 
 <#if writerError??>
-<div class="alert alert-danger" role="alert">
-    ${writerError}
-</div>
+    <@alert.danger writerError />
 </#if>
 
 <form action="/writers/add" method="post" >
