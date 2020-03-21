@@ -23,6 +23,6 @@
 </#if>
 
 <!--Reviews List-->
-<@r.reviewCards currentUser.id/>
+<@r.reviewCards currentUser.id isAdmin />
 
 </@c.page>

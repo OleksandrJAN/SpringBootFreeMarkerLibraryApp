@@ -1,9 +1,12 @@
 <#import "/parts/alerts.ftl" as alert>
 
-<#macro reviewCards currUserId>
+<#macro reviewCards currUserId isAdmin>
 <#list reviews as review>
 <!--find a better solution-->
-    <#assign currAssessment = review.assessment>
+    <#assign
+        currAssessment = review.assessment
+        reviewAuthorId = review.author.id
+    >
     <#if currAssessment == 'POSITIVE'>
         <#assign bg = 'bg-success'>
     <#elseif currAssessment == 'NEUTRAL'>
@@ -29,8 +32,11 @@
             </div>
             <div class="card-body">
                 <p class="card-text">${review.text}</p>
-                <#if review.author.id == currUserId>
-                    <a class="card-link" href="/users/${currUserId}/reviews/${review.id}">Edit</a>
+                <#if reviewAuthorId == currUserId || isAdmin>
+                    <div class="row mx-auto">
+                        <a class="card-link" href="/users/${reviewAuthorId}/reviews/${review.id}">Edit</a>
+                        <a class="card-link" href="/users/${reviewAuthorId}/reviews/${review.id}/delete">Delete</a>
+                    </div>
                 </#if>
             </div>
         </div>
@@ -100,5 +106,3 @@
 
 </form>
 </#macro>
-
-

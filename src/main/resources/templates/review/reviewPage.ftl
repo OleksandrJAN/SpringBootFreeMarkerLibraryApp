@@ -6,7 +6,7 @@
 <@c.page>
 
 <!--Review Edit Page-->
-<@r.reviewPage "/users/${currentUser.id}/reviews/${reviewId}" "Edit"/>
+<@r.reviewPage "/users/${reviewAuthorId}/reviews/${reviewId}" "Edit"/>
 
 
 </@c.page>

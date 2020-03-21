@@ -46,4 +46,8 @@ public class ReviewService {
         return userReviews.contains(review);
     }
 
+    public void deleteUserReview(Review review){
+        reviewRepo.delete(review);
+    }
+
 }
