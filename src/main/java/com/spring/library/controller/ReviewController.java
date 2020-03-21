@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -29,9 +32,7 @@ public class ReviewController {
             @PathVariable("bookId") Book book,
             Model model
     ) {
-        if (book == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "BOOK NOT FOUND");
-        }
+        ControllerUtils.isBookExists(book);
 
         model.addAttribute("reviews", reviewService.getAllBookReviews(book.getId()));
         model.addAttribute("assessments", Assessment.values());
@@ -47,9 +48,7 @@ public class ReviewController {
             BindingResult bindingResult,
             Model model
     ) {
-        if (book == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "BOOK NOT FOUND");
-        }
+        ControllerUtils.isBookExists(book);
 
         boolean isAssessmentSelected = isAssessmentSelected(review, model);
         boolean isBindingResultHasErrors = isBindingResultHasErrors(bindingResult, model);
@@ -75,9 +74,7 @@ public class ReviewController {
             @PathVariable("userId") User user,
             Model model
     ) {
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "USER NOT FOUND");
-        }
+        ControllerUtils.isUserProfileExists(userProfile);
 
         model.addAttribute("reviews", reviewService.getAllUserReviews(user.getId()));
         model.addAttribute("user", user);

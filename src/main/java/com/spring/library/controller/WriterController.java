@@ -3,7 +3,6 @@ package com.spring.library.controller;
 import com.spring.library.domain.Writer;
 import com.spring.library.service.WriterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -31,9 +29,7 @@ public class WriterController {
 
     @GetMapping("/writers/{writer:[\\d]+}")
     public String getBookPage(@PathVariable Writer writer, Model model) {
-        if (writer == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "WRITER NOT FOUND");
-        }
+        ControllerUtils.isWriterExists(writer);
 
         model.addAttribute("writer", writer);
         return "writer/writerPage";

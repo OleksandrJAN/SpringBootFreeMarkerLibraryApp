@@ -6,7 +6,6 @@ import com.spring.library.domain.Writer;
 import com.spring.library.service.BookService;
 import com.spring.library.service.WriterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -43,9 +41,7 @@ public class BookController {
 
     @GetMapping("books/{book:[\\d]+}")
     public String getBookPage(@PathVariable Book book, Model model) {
-        if (book == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "BOOK NOT FOUND");
-        }
+        ControllerUtils.isBookExists(book);
 
         model.addAttribute("book", book);
         return "book/bookPage";
