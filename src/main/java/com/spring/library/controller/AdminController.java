@@ -4,7 +4,6 @@ import com.spring.library.domain.Role;
 import com.spring.library.domain.User;
 import com.spring.library.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 import java.util.Set;
@@ -35,17 +33,15 @@ public class AdminController {
     /*/users/{user}/roles?!*/
     @PostMapping("/users/{user:[\\d]+}")
     public String updateUserRoles(
-            @PathVariable User user,
+            @PathVariable("user") User userProfile,
             @RequestParam Map<String, String> form,
             Model model
     ) {
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "USER NOT FOUND");
-        }
+        ControllerUtils.isUserProfileExists(userProfile);
 
         Set<Role> selectedRoles = userService.getSelectedRolesFromForm(form);
         if (!selectedRoles.isEmpty()) {
-            userService.updateUserRoles(user, selectedRoles);
+            userService.updateUserRoles(userProfile, selectedRoles);
         }
 
         return "redirect:/users/{user}";
