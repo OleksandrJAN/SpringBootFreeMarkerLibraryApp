@@ -6,11 +6,17 @@
 <@c.page>
 
     <!--User Name-->
-    <@profile.usernameForm userProfile.username />
+    <@profile.usernameForm
+        userName = userProfile.username
+    />
 
     <#if isAdmin>
         <!--User Roles-->
-        <@profile.userRolesForm userProfile.id userProfile.roles roles />
+        <@profile.userRolesForm
+            userId      = userProfile.id
+            userRoles   = userProfile.roles
+            allRoles    = roles
+        />
     </#if>
 
     <!--Review Link-->

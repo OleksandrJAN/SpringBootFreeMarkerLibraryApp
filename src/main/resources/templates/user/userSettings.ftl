@@ -1,61 +1,41 @@
 <#import "/parts/common.ftl" as c>
+<#import "userProfileForms.ftl" as profile>
 
 <@c.page>
 
-<form method="post">
-    <input type="hidden" name="_csrf" value="${_csrf.token}" />
+<!--User Name-->
+<@profile.usernameForm
+    userName = userProfile.username
+/>
 
-    <!--username-->
-    <div class="form-group row">
-        <label  class="col-sm-2 col-form-label">User name:</label>
-        <div class="col-sm-6">
-            <input readonly class="form-control" type="text" name="username" value="${username}" />
-        </div>
-    </div>
+
+<form action="/settings/password" method="post">
+    <input type="hidden" name="_csrf" value="${_csrf.token}" />
+    <input type="hidden" name="_method" value="PUT" />
 
     <!--current password confirmation-->
-    <div class="form-group row">
-        <label  class="col-sm-2 col-form-label">Current password:</label>
-        <div class="col-sm-6">
-            <input class="form-control <#if currentPasswordConfirmError??>is-invalid</#if>" type="password"
-                   name="currentPasswordConfirmation" placeholder="Password"
-            />
-            <#if currentPasswordConfirmError??>
-                <div class="invalid-feedback">
-                    ${currentPasswordConfirmError}
-                </div>
-            </#if>
-        </div>
-    </div>
+    <@profile.passwordForm
+        passwordLabel       =   "Current password:"
+        passwordInputId     =   "currentPasswordConfirmationInput"
+        passwordInputName   =   "currentPasswordConfirmation"
+        passwordError       =   (currentPasswordConfirmationError??)?then(currentPasswordConfirmationError, "")
+    />
 
     <!--new password-->
-    <div class="form-group row">
-        <label  class="col-sm-2 col-form-label">New password:</label>
-        <div class="col-sm-6">
-            <input class="form-control <#if newPasswordError??>is-invalid</#if>" type="password"
-                   name="newPassword" placeholder="Password"
-            />
-            <#if newPasswordError??>
-                <div class="invalid-feedback">
-                    ${newPasswordError}
-                </div>
-            </#if>
-        </div>
-    </div>
+    <@profile.passwordForm
+        passwordLabel       =   "New password:"
+        passwordInputId     =   "newPasswordInput"
+        passwordInputName   =   "newPassword"
+        passwordError       =   (newPasswordError??)?then(newPasswordError, "")
+    />
 
     <!--new password confirmation-->
-    <div class="form-group row">
-        <label  class="col-sm-2 col-form-label">Retype new password:</label>
-        <div class="col-sm-6">
-            <input class="form-control <#if newPasswordConfirmError??>is-invalid</#if>" type="password"
-                   name="newPasswordConfirmation" placeholder="Password"/>
-            <#if newPasswordConfirmError??>
-                <div class="invalid-feedback">
-                    ${newPasswordConfirmError}
-                </div>
-            </#if>
-        </div>
-    </div>
+    <@profile.passwordForm
+        passwordLabel       =   "Retype new password:"
+        passwordInputId     =   "newPasswordConfirmationInput"
+        passwordInputName   =   "newPasswordConfirmation"
+        passwordError       =   (newPasswordConfirmationError??)?then(newPasswordConfirmationError, "")
+    />
 
     <button class="btn btn-primary" type="submit">Save</button>
 

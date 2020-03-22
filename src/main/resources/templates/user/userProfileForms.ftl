@@ -11,6 +11,24 @@
 </#macro>
 
 
+<!--User Password-->
+<#macro passwordForm passwordLabel passwordInputId passwordInputName passwordError>
+<div class="form-group row">
+    <label class="col-md-2 col-form-label" for="${passwordInputId}">${passwordLabel}</label>
+    <div class="col">
+        <input class="form-control <#if passwordError?has_content>is-invalid</#if>" type="password" name="${passwordInputName}"
+               id="${passwordInputId}" placeholder="Password"
+        />
+        <#if passwordError?has_content>
+            <div class="invalid-feedback">
+                ${passwordError}
+            </div>
+        </#if>
+    </div>
+</div>
+</#macro>
+
+
 <!--User Roles-->
 <#macro userRolesForm userId userRoles allRoles>
 <form action="/users/${userId}/roles" method="post">
