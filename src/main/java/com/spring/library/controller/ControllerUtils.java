@@ -5,11 +5,11 @@ import com.spring.library.domain.Review;
 import com.spring.library.domain.User;
 import com.spring.library.domain.Writer;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -21,6 +21,16 @@ class ControllerUtils {
                 FieldError::getDefaultMessage
         );
         return bindingResult.getFieldErrors().stream().collect(collector);
+    }
+
+    static boolean mergeErrorsWithModel(BindingResult bindingResult, Model model) {
+        boolean isBindingResultHasErrors = bindingResult.hasErrors();
+        if (isBindingResultHasErrors) {
+            Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
+            model.mergeAttributes(errorsMap);
+        }
+
+        return isBindingResultHasErrors;
     }
 
     static void isBookExists(Book book) {

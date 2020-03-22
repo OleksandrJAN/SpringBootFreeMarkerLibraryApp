@@ -1,20 +1,17 @@
 package com.spring.library.controller;
 
-import com.spring.library.domain.Book;
-import com.spring.library.domain.Genre;
-import com.spring.library.domain.Writer;
+import com.spring.library.domain.*;
 import com.spring.library.service.BookService;
+import com.spring.library.service.ReviewService;
 import com.spring.library.service.WriterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -32,6 +29,9 @@ public class BookController {
     @Autowired
     private WriterService writerService;
 
+    @Autowired
+    private ReviewService reviewService;
+
 
     @GetMapping("books")
     public String getBookList(Model model) {
@@ -46,7 +46,6 @@ public class BookController {
         model.addAttribute("book", book);
         return "book/bookPage";
     }
-
 
     @GetMapping("books/add")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -122,5 +121,135 @@ public class BookController {
         }
 
         return getBookAddPage(model);
+    }
+
+
+
+    /*Book Reviews*/
+
+    @GetMapping("/books/{book:[\\d]+}/reviews")
+    public String getBookReviewsPage(@PathVariable("book") Book reviewBook, Model model) {
+        ControllerUtils.isBookExists(reviewBook);
+
+        addAssessmentsToModel(model);
+        addBookAndBookReviewsToModel(model, reviewBook);
+        return "review/reviewList";
+    }
+
+    @PostMapping("/books/{book:[\\d]+}/reviews")
+    public String addNewReview(
+            @PathVariable("book") Book reviewBook,
+            @AuthenticationPrincipal User currentUser,
+            @Valid Review review,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        ControllerUtils.isBookExists(reviewBook);
+
+        boolean isAssessmentSelected = isAssessmentSelected(review, model);
+        boolean isBindingResultHasErrors = ControllerUtils.mergeErrorsWithModel(bindingResult, model);
+
+        if (isAssessmentSelected && !isBindingResultHasErrors) {
+            review.setAuthor(currentUser);
+            review.setBook(reviewBook);
+            if (reviewService.addNewReview(currentUser.getId(), reviewBook.getId(), review)) {
+                return "redirect:/books/" + reviewBook.getId() + "/reviews";
+            } else {
+                model.addAttribute("reviewError", "You have already written a review of this book");
+            }
+        }
+
+        addAssessmentsToModel(model);
+        addBookAndBookReviewsToModel(model, reviewBook);
+        addReviewToModel(model, review);
+        return "review/reviewList";
+    }
+
+
+    @GetMapping("/books/{book:[\\d]+}/reviews/{review:[\\d]+}")
+    public String getUserReviewPage(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("review") Review review,
+            @PathVariable("book") Book book,
+            Model model
+    ) {
+        checkCorrectRequest(book, review, currentUser);
+
+        addReviewToModel(model, review);
+        addReviewTextAndSelectedAssessmentToModel(model, review.getText(), review.getAssessment());
+        addAssessmentsToModel(model);
+        return "review/reviewEditPage";
+    }
+
+    @PutMapping("/books/{book:[\\d]+}/reviews/{currentReview:[\\d]+}")
+    public String editUserReview(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("book") Book book,
+            @PathVariable("currentReview") Review currentReview,
+            @Valid Review editedReview,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        checkCorrectRequest(book, currentReview, currentUser);
+
+        boolean isBindingResultHasErrors = ControllerUtils.mergeErrorsWithModel(bindingResult, model);
+        if (!isBindingResultHasErrors) {
+            reviewService.updateUserReview(currentReview, editedReview);
+            return "redirect:/books/" + book.getId() + "/reviews";
+        }
+
+        addReviewToModel(model, currentReview);
+        addReviewTextAndSelectedAssessmentToModel(model, editedReview.getText(), editedReview.getAssessment());
+        addAssessmentsToModel(model);
+        return "review/reviewEditPage";
+    }
+
+    @DeleteMapping("/books/{book:[\\d]+}/reviews/{review:[\\d]+}")
+    public String deleteReview(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("book") Book book,
+            @PathVariable("review") Review review
+    ) {
+        checkCorrectRequest(book, review, currentUser);
+
+        reviewService.deleteUserReview(review);
+
+        return "redirect:/books/" + book.getId() + "/reviews";
+    }
+
+
+    private void checkCorrectRequest(Book book, Review review, User currentUser) {
+        ControllerUtils.isBookExists(book);
+        ControllerUtils.isReviewExists(review);
+        reviewService.checkBookContainsReview(book, review);
+        reviewService.checkCurrentUserRights(currentUser, review.getAuthor());
+    }
+
+    private boolean isAssessmentSelected(Review review, Model model) {
+        boolean isAssessmentSelected = review.getAssessment() != null;
+        if (!isAssessmentSelected) {
+            model.addAttribute("assessmentError", "Please, select an assessment");
+        }
+
+        return isAssessmentSelected;
+    }
+
+
+    private void addBookAndBookReviewsToModel(Model model, Book reviewBook) {
+        model.addAttribute("reviews", reviewService.getAllBookReviews(reviewBook.getId()));
+        model.addAttribute("book", reviewBook);
+    }
+
+    private void addAssessmentsToModel(Model model) {
+        model.addAttribute("assessments", Assessment.values());
+    }
+
+    private void addReviewToModel(Model model, Review review) {
+        model.addAttribute("review", review);
+    }
+
+    private void addReviewTextAndSelectedAssessmentToModel(Model model, String text, Assessment assessment) {
+        model.addAttribute("displayedText", text);
+        model.addAttribute("selectedAssessment", assessment);
     }
 }

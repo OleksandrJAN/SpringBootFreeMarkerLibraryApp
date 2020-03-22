@@ -17,12 +17,35 @@
     <div class="collapse <#if review??>show</#if>" id="collapseReview">
         <div class="form-group">
             <!--Review Add Page-->
-            <@r.reviewPage "/books/${book.id}/reviews" "Add"/>
+            <#if review??>
+                <@r.reviewPage
+                    action              = "/books/${book.id}/reviews"
+                    buttonText          = "Add"
+                    reviewText          = review.text
+                    reviewAssessment    = review.assessment
+                />
+            <#else>
+                <@r.reviewPage
+                    action              = "/books/${book.id}/reviews"
+                    buttonText          = "Add"
+                />
+            </#if>
+
         </div>
     </div>
 </#if>
 
 <!--Reviews List-->
-<@r.reviewCards currentUser.id isAdmin />
+<#if book??>
+    <#assign modificationPath = "/books/${book.id}/reviews">
+<#else>
+    <#assign modificationPath = "/users/${userProfile.id}/reviews">
+</#if>
+
+<@r.reviewCards
+    currUserId  = currentUser.id
+    isAdmin     = isAdmin
+    modificationActionPath = modificationPath
+/>
 
 </@c.page>

@@ -1,11 +1,10 @@
 <#import "/parts/alerts.ftl" as alert>
 
-<#macro reviewCards currUserId isAdmin>
+<#macro reviewCards currUserId isAdmin modificationActionPath>
 <#list reviews as review>
 <!--find a better solution-->
     <#assign
         currAssessment = review.assessment
-        reviewAuthorId = review.author.id
     >
     <#if currAssessment == 'POSITIVE'>
         <#assign bg = 'bg-success'>
@@ -32,10 +31,15 @@
             </div>
             <div class="card-body">
                 <p class="card-text">${review.text}</p>
-                <#if reviewAuthorId == currUserId || isAdmin>
-                    <div class="row mx-auto">
-                        <a class="card-link" href="/users/${reviewAuthorId}/reviews/${review.id}">Edit</a>
-                        <a class="card-link" href="/users/${reviewAuthorId}/reviews/${review.id}/delete">Delete</a>
+                <#if review.author.id == currUserId || isAdmin>
+                    <div class="row">
+                        <a class="card-link btn btn-link" href="${modificationActionPath}/${review.id}"
+                           role="button">Edit</a>
+                        <form action="${modificationActionPath}/${review.id}" method="post">
+                            <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                            <input type="hidden" name="_method" value="DELETE" />
+                            <button class="card-link btn btn-link" type="submit">Delete</button>
+                        </form>
                     </div>
                 </#if>
             </div>
@@ -51,25 +55,29 @@
 
 
 
-<#macro reviewPage action buttonText>
+<#macro reviewPage action buttonText reviewText="" reviewAssessment="" putAction=false>
 <form action="${action}" method="post">
     <input type="hidden" name="_csrf" value="${_csrf.token}" />
+    <#if putAction>
+        <input type="hidden" name="_method" value="PUT" />
+    </#if>
 
     <#if reviewError??>
-        <@alert.danger reviewError />
+        <@alert.danger
+            message = reviewError
+        />
     </#if>
 
     <!--Review Assessment-->
+
     <div class="form-group row">
         <label class="col-md-2 col-form-label" for="selectedAssessment">Review assessment:</label>
         <div class="col">
             <select class="custom-select <#if assessmentError??>is-invalid</#if>"
                     name="assessment" id="selectedAssessment" >
-                <#assign isSelectedAssessment = (review.assessment)??>
-                <#if isSelectedAssessment>
-                    <#assign selectedAssessment = review.assessment>
-                    <#assign assessments = assessments?filter(assessment -> assessment != selectedAssessment)>
-                    <option selected value="${selectedAssessment}">${selectedAssessment}</option>
+                <#if reviewAssessment?has_content>
+                    <#assign assessments = assessments?filter(assessment -> assessment != reviewAssessment)>
+                    <option selected value="${reviewAssessment}">${reviewAssessment}</option>
                 <#else>
                     <option selected disabled>Choose review assessment</option>
                 </#if>
@@ -90,7 +98,7 @@
         <label class="col-md-2 col-form-label" for="reviewTextArea">Review text:</label>
         <div class="col">
             <textarea class="form-control <#if textError??>is-invalid</#if>" name="text" rows="9"
-                      id="reviewTextArea" placeholder="Entry review text"><#if review??>${review.text}</#if></textarea>
+                      id="reviewTextArea" placeholder="Entry review text"><#if reviewText?has_content>${reviewText}</#if></textarea>
             <#if textError??>
                 <div class="invalid-feedback">
                     ${textError}
