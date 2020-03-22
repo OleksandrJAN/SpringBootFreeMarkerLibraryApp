@@ -19,6 +19,13 @@
                 <td>
                     <#list user.roles as role>${role}<#sep>, </#list>
                 </td>
+                <td>
+                    <form action="/users/${user.id}" method="post">
+                        <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </td>
             </tr>
         </#list>
     </tbody>

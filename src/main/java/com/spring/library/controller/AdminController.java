@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -30,21 +27,30 @@ public class AdminController {
         return "user/userList";
     }
 
-    /*/users/{user}/roles?!*/
-    @PostMapping("/users/{user:[\\d]+}")
+    @PostMapping("/users/{user:[\\d]+}/roles")
     public String updateUserRoles(
             @PathVariable("user") User userProfile,
-            @RequestParam Map<String, String> form,
-            Model model
+            @RequestParam Map<String, String> form
     ) {
         ControllerUtils.isUserProfileExists(userProfile);
 
         Set<Role> selectedRoles = userService.getSelectedRolesFromForm(form);
-        if (!selectedRoles.isEmpty()) {
-            userService.updateUserRoles(userProfile, selectedRoles);
+        if (selectedRoles.isEmpty()) {
+            selectedRoles.add(Role.USER);
         }
 
+        userService.updateUserRoles(userProfile, selectedRoles);
+
         return "redirect:/users/{user}";
+    }
+
+    @DeleteMapping("/users/{user:[\\d]+}")
+    public String deleteUser(@PathVariable("user") User userProfile) {
+        ControllerUtils.isUserProfileExists(userProfile);
+
+        userService.deleteUser(userProfile);
+
+        return "redirect:/users";
     }
 
 }
