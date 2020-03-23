@@ -3,6 +3,9 @@
 
 <@c.page>
 
-<@l.login "/registration" true/>
+<@l.login
+    path = "/registration"
+    isRegisterForm = true
+/>
 
 </@c.page>

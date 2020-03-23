@@ -5,11 +5,10 @@ import com.spring.library.service.WriterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -27,34 +26,21 @@ public class WriterController {
         return "writer/writerList";
     }
 
-    @GetMapping("/writers/{writer:[\\d]+}")
-    public String getBookPage(@PathVariable Writer writer, Model model) {
-        ControllerUtils.isWriterExists(writer);
-
-        model.addAttribute("writer", writer);
-        return "writer/writerPage";
-    }
-
 
     @GetMapping("/writers/add")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String getWriterAddPage() {
-        return "writer/writerAdd";
+        return "writer/writerAddPage";
     }
 
-
-    @PostMapping("/writers/add")
+    @PostMapping("/writers")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String addNewWriter(
             @Valid Writer writer,
             BindingResult bindingResult,
             Model model
     ) {
-        boolean isBindingResultHasErrors = bindingResult.hasErrors();
-        if (isBindingResultHasErrors) {
-            Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
-            model.mergeAttributes(errorsMap);
-        }
+        boolean isBindingResultHasErrors = ControllerUtils.mergeErrorsWithModel(bindingResult, model);
 
         if (!isBindingResultHasErrors) {
             if (writerService.addNewWriter(writer)) {
@@ -65,6 +51,47 @@ public class WriterController {
         }
 
         model.addAttribute("writer", writer);
-        return "writer/writerAdd";
+        return "writer/writerAddPage";
     }
+
+
+    @GetMapping("/writers/{writer:[\\d]+}")
+    public String getWriterPage(@PathVariable Writer writer, Model model) {
+        ControllerUtils.isWriterExists(writer);
+
+        model.addAttribute("writer", writer);
+        return "writer/writerPage";
+    }
+
+    @PutMapping("/writers/{writer:[\\d]+}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String updateWriter(
+            @Valid Writer editedWriter,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        ControllerUtils.isWriterExists(editedWriter);
+
+        boolean isBindingResultHasErrors = ControllerUtils.mergeErrorsWithModel(bindingResult, model);
+        if (!isBindingResultHasErrors) {
+            writerService.updateWriter(editedWriter);
+            model.addAttribute("writerUpdated", "Writer updated");
+        }
+
+        model.addAttribute("writer", editedWriter);
+        return "writer/writerPage";
+    }
+
+    @Transactional
+    @DeleteMapping("/writers/{writer:[\\d]+}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String deleteWriter(@PathVariable Writer writer) {
+        ControllerUtils.isWriterExists(writer);
+
+        writerService.deleteWriter(writer);
+
+        return "redirect:/writers";
+    }
+
+
 }

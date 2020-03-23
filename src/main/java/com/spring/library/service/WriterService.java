@@ -31,4 +31,12 @@ public class WriterService {
         Writer writerFromDb = writerRepo.findByFirstNameAndLastName(writer.getFirstName(), writer.getLastName());
         return writerFromDb != null;
     }
+
+    public void updateWriter(Writer editedWriter) {
+        writerRepo.save(editedWriter);
+    }
+
+    public void deleteWriter(Writer writer) {
+        writerRepo.delete(writer);
+    }
 }

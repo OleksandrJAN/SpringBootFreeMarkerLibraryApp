@@ -5,13 +5,20 @@
 <@c.page>
 
 <#if Session?? && Session.SPRING_SECURITY_LAST_EXCEPTION??>
-    <@alert.danger Session.SPRING_SECURITY_LAST_EXCEPTION.message />
+    <@alert.danger
+        message = Session.SPRING_SECURITY_LAST_EXCEPTION.message
+    />
 </#if>
 
 <#if registrationSuccessful??>
-    <@alert.success "Registration successful" />
+    <@alert.success
+        message = "Registration successful"
+    />
 </#if>
 
-<@l.login "/login" false />
+<@l.login
+    path = "/login"
+    isRegisterForm = false
+/>
 
 </@c.page>

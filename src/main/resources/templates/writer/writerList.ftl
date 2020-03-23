@@ -1,4 +1,5 @@
 <#import "/parts/common.ftl" as c>
+
 <#include "/parts/security.ftl">
 
 <@c.page>
@@ -21,7 +22,6 @@
         <tr>
             <th scope="col">First name</th>
             <th scope="col">Last name</th>
-            <th scope="col">Books</th>
         </tr>
     </thead>
 
@@ -29,10 +29,16 @@
     <#list writers as writer>
         <tr>
             <td><a href="/writers/${writer.id}">${writer.firstName}</a></td>
-            <td>${writer.lastName}</td>
-            <td>
-                <#list writer.books as book>${book.bookName}<#sep>, </#list>
-            </td>
+            <td><a href="/writers/${writer.id}">${writer.lastName}</a></td>
+            <#if isAdmin>
+                <td>
+                    <form action="/writers/${writer.id}" method="post">
+                        <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </td>
+            </#if>
         </tr>
     </#list>
     </tbody>
