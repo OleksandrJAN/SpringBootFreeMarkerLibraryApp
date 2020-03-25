@@ -7,10 +7,9 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
-/*For each user : ReviewTable???*/
-
 // форма логина доступна для авторизованного пользователя (форма регистрации недоступна) (idk)
 // при смене пароля вызывать /logout (idk)
+// добавить файл с дэфолтными формами (за основу взять WriterForms.inputForm + userProfileForms.passwordForm)
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {

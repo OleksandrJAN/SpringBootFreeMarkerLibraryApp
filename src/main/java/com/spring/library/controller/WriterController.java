@@ -82,7 +82,6 @@ public class WriterController {
         return "writer/writerPage";
     }
 
-    @Transactional
     @DeleteMapping("/writers/{writer:[\\d]+}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String deleteWriter(@PathVariable Writer writer) {
