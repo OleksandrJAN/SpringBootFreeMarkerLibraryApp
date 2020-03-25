@@ -1,8 +1,14 @@
 <#import "/parts/common.ftl" as c>
+<#import "bookForms.ftl" as bf>
+
 <#include "/parts/security.ftl">
 
 <@c.page>
 
-<#include "/book/bookForm.ftl">
+
+<@bf.bookForm
+    admin = isAdmin
+/>
+
 
 </@c.page>

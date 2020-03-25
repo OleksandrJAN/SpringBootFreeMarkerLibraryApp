@@ -4,8 +4,9 @@
 <@c.page>
 
 <@bf.bookAddForm
-    action  = "/books"
+    action          = "/books/${currentBookId}"
+    putAction       = true
+    selectedWriter  = book.writer
 />
 
 </@c.page>
-

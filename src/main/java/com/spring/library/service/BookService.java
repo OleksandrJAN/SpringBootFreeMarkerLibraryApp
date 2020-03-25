@@ -6,6 +6,7 @@ import com.spring.library.repos.BookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -48,11 +49,6 @@ public class BookService {
         return selectedGenres;
     }
 
-    public String getPosterFilename(MultipartFile posterFile) {
-        String uuidFile = UUID.randomUUID().toString();
-        return uuidFile + "." + posterFile.getOriginalFilename();
-    }
-
 
     public boolean addNewBook(Book book) {
         if (isBookExists(book)) {
@@ -61,6 +57,41 @@ public class BookService {
 
         bookRepo.save(book);
         return true;
+    }
+
+    public void updateBook(Book currentBook, Book editedBook) {
+        boolean isNewPosterFile = !StringUtils.isEmpty(editedBook.getFilename());
+        if (isNewPosterFile) {
+            deletePosterFile(currentBook.getFilename());
+            currentBook.setFilename(editedBook.getFilename());
+        }
+
+        currentBook.setWriter(editedBook.getWriter());
+        currentBook.setBookName(editedBook.getBookName());
+        currentBook.setAnnotation(editedBook.getAnnotation());
+        currentBook.setGenres(editedBook.getGenres());
+        currentBook.setPublicationDate(editedBook.getPublicationDate());
+
+        bookRepo.save(currentBook);
+    }
+
+    public void deleteBook(Book book) {
+        deletePosterFile(book.getFilename());
+        bookRepo.delete(book);
+    }
+
+
+    public String getPosterFilename(MultipartFile posterFile) {
+        String uuidFile = UUID.randomUUID().toString();
+        return uuidFile + "." + posterFile.getOriginalFilename();
+    }
+
+    public boolean isImage(MultipartFile file) {
+        try {
+            return ImageIO.read(file.getInputStream()) != null;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public void loadPosterFile(MultipartFile file, String resultFilename) throws IOException {
@@ -72,12 +103,11 @@ public class BookService {
         file.transferTo(new File(uploadPath + "/" + resultFilename));
     }
 
-    public boolean isImage(MultipartFile file) {
-        try {
-            return ImageIO.read(file.getInputStream()) != null;
-        } catch (IOException e) {
-            return false;
-        }
+    private void deletePosterFile(String filename) {
+        String path = uploadPath + "/" + filename;
+        File poster = new File(path);
+        poster.delete();
     }
+
 
 }

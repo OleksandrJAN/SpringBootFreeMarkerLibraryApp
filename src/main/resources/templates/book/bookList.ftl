@@ -1,4 +1,5 @@
 <#import "/parts/common.ftl" as c>
+
 <#include "/parts/security.ftl">
 
 <@c.page>
@@ -28,10 +29,19 @@
     <#list books as book>
         <tr>
             <td><a href="/books/${book.id}">${book.bookName}</a></td>
-            <td>${book.writer.toString()}</td>
+            <td><a href="/writers/${book.writer.id}">${book.writer.toString()}</a></td>
             <td>
                 <#list book.genres as genre>${genre}<#sep>, </#list>
             </td>
+            <#if isAdmin>
+                <td>
+                    <form action="/books/${book.id}" method="post">
+                        <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </td>
+            </#if>
         </tr>
     </#list>
     </tbody>
