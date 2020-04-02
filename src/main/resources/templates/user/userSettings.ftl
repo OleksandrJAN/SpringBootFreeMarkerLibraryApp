@@ -1,40 +1,57 @@
 <#import "/parts/common.ftl" as c>
-<#import "userProfileForms.ftl" as profile>
+
+<#import "/ui/ui.ftl" as ui>
+<#import "/ui/hidden.ftl" as hidden>
 
 <@c.page>
 
 <!--User Name-->
-<@profile.usernameForm
-    userName = userProfile.username
+<@ui.labelInputRow
+    inputId             = "userNameInput"
+    inputName           = "username"
+    inputValue          = userProfile.username
+    inputPlaceholder    = "Username"
+    inputReadonly       = true
+    labelText           = "User name:"
+    labelMd             = "-md-2"
 />
 
 
 <form action="/settings/password" method="post">
-    <input type="hidden" name="_csrf" value="${_csrf.token}" />
-    <input type="hidden" name="_method" value="PUT" />
+    <@hidden.csrf />
+    <@hidden.method value = "PUT" />
 
     <!--current password confirmation-->
-    <@profile.passwordForm
-        passwordLabel       =   "Current password:"
-        passwordInputId     =   "currentPasswordConfirmationInput"
-        passwordInputName   =   "currentPasswordConfirmation"
-        passwordError       =   (currentPasswordConfirmationError??)?then(currentPasswordConfirmationError, "")
+    <@ui.labelInputRow
+        inputId             = "currentPasswordConfirmationInput"
+        inputName           = "currentPasswordConfirmation"
+        inputPlaceholder    = "Password"
+        inputError          = (currentPasswordConfirmationError??)?then(currentPasswordConfirmationError, "")
+        inputType           = "password"
+        labelText           = "Current password:"
+        labelMd             = "-md-2"
     />
 
     <!--new password-->
-    <@profile.passwordForm
-        passwordLabel       =   "New password:"
-        passwordInputId     =   "newPasswordInput"
-        passwordInputName   =   "newPassword"
-        passwordError       =   (newPasswordError??)?then(newPasswordError, "")
+    <@ui.labelInputRow
+        inputId             = "newPasswordInput"
+        inputName           = "newPassword"
+        inputPlaceholder    = "Password"
+        inputError          = (newPasswordError??)?then(newPasswordError, "")
+        inputType           = "password"
+        labelText           = "New password:"
+        labelMd             = "-md-2"
     />
 
     <!--new password confirmation-->
-    <@profile.passwordForm
-        passwordLabel       =   "Retype new password:"
-        passwordInputId     =   "newPasswordConfirmationInput"
-        passwordInputName   =   "newPasswordConfirmation"
-        passwordError       =   (newPasswordConfirmationError??)?then(newPasswordConfirmationError, "")
+    <@ui.labelInputRow
+        inputId             = "newPasswordConfirmationInput"
+        inputName           = "newPasswordConfirmation"
+        inputPlaceholder    = "Password"
+        inputError          = (newPasswordConfirmationError??)?then(newPasswordConfirmationError, "")
+        inputType           = "password"
+        labelText           = "Retype new password:"
+        labelMd             = "-md-2"
     />
 
     <button class="btn btn-primary" type="submit">Save</button>

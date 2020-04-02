@@ -1,25 +1,3 @@
-<!--Input form-->
-<#macro inputForm   inputLabel          inputId             inputName   value=""
-                    inputPlaceholder="" readonly=false      error=""    type="text"
->
-<div class="form-group row">
-    <label for="${inputId}" class="col-md-2 col-form-label">${inputLabel}</label>
-    <div class="col">
-        <input class="form-control <#if error?has_content>is-invalid</#if>"
-               value="${value}" type="${type}" name="${inputName}"
-               placeholder="${inputPlaceholder}" id="${inputId}"
-               <#if readonly>readonly</#if>
-        />
-        <#if error?has_content>
-            <div class="invalid-feedback">
-                ${error}
-            </div>
-        </#if>
-    </div>
-</div>
-</#macro>
-
-
 <!--Book Cards-->
 <#macro bookCards author books isAdmin>
 

@@ -1,6 +1,8 @@
 <#import "/parts/common.ftl" as c>
-<#import "/parts/alerts.ftl" as alert>
-<#import "writerForms.ftl" as forms>
+
+<#import "/ui/ui.ftl" as ui>
+<#import "/ui/hidden.ftl" as hidden>
+<#import "/ui/alerts.ftl" as alert>
 
 <@c.page>
 
@@ -11,26 +13,28 @@
 </#if>
 
 <form action="/writers" method="post">
-    <input type="hidden" name="_csrf" value="${_csrf.token}" />
+    <@hidden.csrf />
 
     <!--First Name-->
-    <@forms.inputForm
-        inputLabel          = "Writer first name:"
+    <@ui.labelInputRow
         inputId             = "writerFirstNameInput"
         inputName           = "firstName"
-        value               = ((writer.firstName)??)?then(writer.firstName, "")
+        inputValue          = ((writer.firstName)??)?then(writer.firstName, "")
         inputPlaceholder    = "First name"
-        error               = (firstNameError??)?then(firstNameError, "")
+        inputError          = (firstNameError??)?then(firstNameError, "")
+        labelText           = "Writer first name:"
+        labelMd             = "-md-2"
     />
 
     <!--Last Name-->
-    <@forms.inputForm
-        inputLabel          = "Writer last name:"
+    <@ui.labelInputRow
         inputId             = "writerLastNameInput"
         inputName           = "lastName"
-        value               = ((writer.lastName)??)?then(writer.lastName, "")
+        inputValue          = ((writer.lastName)??)?then(writer.lastName, "")
         inputPlaceholder    = "Last name"
-        error               = (lastNameError??)?then(lastNameError, "")
+        inputError          = (lastNameError??)?then(lastNameError, "")
+        labelText           = "Writer last name:"
+        labelMd             = "-md-2"
     />
 
     <!--Buttons-->

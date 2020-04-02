@@ -1,4 +1,4 @@
-<#import "/parts/alerts.ftl" as alert>
+<#import "/ui/alerts.ftl" as alert>
 
 <#macro reviewCards currUserId isAdmin modificationActionPath>
 <#list reviews as review>

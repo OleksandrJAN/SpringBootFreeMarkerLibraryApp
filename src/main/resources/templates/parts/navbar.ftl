@@ -1,4 +1,4 @@
-<#import "/log/logMacros.ftl" as l>
+<#import "/ui/hidden.ftl" as hidden>
 
 <#include "security.ftl">
 
@@ -36,7 +36,7 @@
         <#if currentUser??>
             <div class="navbar-text mr-2">${name}</div>
             <a class="nav-link" href="/settings">Settings</a>
-            <@l.logout/>
+            <@hidden.logout />
         </#if>
 
         <#if !currentUser?? && !springMacroRequestContext.requestUri?contains("/login") >

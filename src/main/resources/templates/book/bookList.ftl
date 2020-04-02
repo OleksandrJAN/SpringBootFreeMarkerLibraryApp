@@ -1,5 +1,8 @@
 <#import "/parts/common.ftl" as c>
 
+<#import "/ui/ui.ftl" as ui>
+<#import "/ui/hidden.ftl" as hidden>
+
 <#include "/parts/security.ftl">
 
 <@c.page>
@@ -8,43 +11,28 @@
     <div class="col-md-1 col-form-label">
         <h5>Books</h5>
     </div>
-    <div class="col">
-        <#if isAdmin>
+    <#if isAdmin>
+        <div class="col">
             <a class="btn btn-primary" href="/books/add">Add new book</a>
-        </#if>
-    </div>
+        </div>
+    </#if>
 </div>
 
+<@ui.table
+    headers = ["Name", "Author", "Genres"]
+>
 
-<table class="table table-striped">
-    <thead>
+<#list books as book>
     <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Author</th>
-        <th scope="col">Genres</th>
+        <td><a href="/books/${book.id}">${book.bookName}</a></td>
+        <td><a href="/writers/${book.writer.id}">${book.writer.toString()}</a></td>
+        <td>
+            <#list book.genres as genre>${genre}<#sep>, </#list>
+        </td>
     </tr>
-    </thead>
+</#list>
 
-    <tbody>
-    <#list books as book>
-        <tr>
-            <td><a href="/books/${book.id}">${book.bookName}</a></td>
-            <td><a href="/writers/${book.writer.id}">${book.writer.toString()}</a></td>
-            <td>
-                <#list book.genres as genre>${genre}<#sep>, </#list>
-            </td>
-            <#if isAdmin>
-                <td>
-                    <form action="/books/${book.id}" method="post">
-                        <input type="hidden" name="_csrf" value="${_csrf.token}" />
-                        <input type="hidden" name="_method" value="DELETE" />
-                        <button class="btn btn-danger" type="submit">Delete</button>
-                    </form>
-                </td>
-            </#if>
-        </tr>
-    </#list>
-    </tbody>
-</table>
+</@ui.table>
+
 
 </@c.page>
