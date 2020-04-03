@@ -17,20 +17,11 @@
     <div class="collapse <#if review??>show</#if>" id="collapseReview">
         <div class="form-group">
             <!--Review Add Page-->
-            <#if review??>
-                <@r.reviewPage
-                    action              = "/books/${book.id}/reviews"
-                    buttonText          = "Add"
-                    reviewText          = review.text
-                    reviewAssessment    = review.assessment
-                />
-            <#else>
-                <@r.reviewPage
-                    action              = "/books/${book.id}/reviews"
-                    buttonText          = "Add"
-                />
-            </#if>
-
+            <@r.reviewPage
+                action              = reviewAction
+                reviewText          = ((review.text)??)?then(review.text, "")
+                reviewAssessment    = ((review.assessment)??)?then(review.assessment, "")
+            />
         </div>
     </div>
 </#if>

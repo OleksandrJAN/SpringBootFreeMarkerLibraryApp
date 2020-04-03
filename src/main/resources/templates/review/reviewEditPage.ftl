@@ -6,18 +6,11 @@
 <@c.page>
 
 
-<#if springMacroRequestContext.requestUri?contains("/books") >
-    <#assign actionPath = "/books/${book.id}/reviews/${review.id}" >
-<#else>
-    <#assign actionPath = "/users/${review.author.id}/reviews/${review.id}" >
-</#if>
-
 <!--Review Edit Page-->
 <@r.reviewPage
-    action              = actionPath
-    buttonText          = "Edit"
-    reviewText          = displayedText
-    reviewAssessment    = selectedAssessment
+    action              = reviewAction
+    reviewText          = review.text
+    reviewAssessment    = review.assessment
     putAction           = true
 />
 

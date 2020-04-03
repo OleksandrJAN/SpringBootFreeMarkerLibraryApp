@@ -1,8 +1,17 @@
-<#macro bookAddForm action putAction=false selectedWriter="">
+<#import "/ui/ui.ftl" as ui>
+<#import "/ui/hidden.ftl" as hidden>
+
+<#macro bookAddForm
+    action
+    putAction=false selectedWriter=""
+>
 <form action="${action}" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="_csrf" value="${_csrf.token}" />
+    <@hidden.csrf />
+
     <#if putAction>
-        <input type="hidden" name="_method" value="PUT"/>
+        <@hidden.method
+            value = "PUT"
+        />
     </#if>
 
     <!--Author drop list-->
@@ -32,75 +41,54 @@
     </div>
 
     <!--Book Name-->
-    <div class="form-group row">
-        <label class="col-md-2 col-form-label" for="bookNameInput">Book name:</label>
-        <div class="col">
-            <input class="form-control ${(bookNameError??)?string('is-invalid', '')}"
-                   value="<#if (book.bookName)??>${book.bookName}</#if>"
-                   type="text" name="bookName" placeholder="Book name" id="bookNameInput"
-            />
-            <#if bookNameError??>
-                <div class="invalid-feedback">
-                    ${bookNameError}
-                </div>
-            </#if>
-        </div>
-    </div>
+    <@ui.labelInputRow
+        inputId             = "bookNameInput"
+        inputName           = "bookName"
+        inputValue          = ((book.bookName)??)?then(book.bookName, "")
+        inputPlaceholder    = "Book name"
+        inputError          = (bookNameError??)?then(bookNameError, "")
+        labelText           = "Book name:"
+        labelMd             = "-md-2"
+    />
+
 
     <!--Annotation-->
     <div class="form-group">
-        <label for="annotationTextArea">Book annotation:</label>
-        <textarea class="form-control ${(annotationError??)?string('is-invalid', '')}" name="annotation" rows="6"
-                  id="annotationTextArea" placeholder="Book annotation"><#if (book.annotation)??>${book.annotation}</#if></textarea>
-        <#if annotationError??>
-            <div class="invalid-feedback">
-                ${annotationError}
-            </div>
-        </#if>
+        <@ui.label
+            text    = "Book annotation:"
+            forId   = "annotationTextArea"
+        />
+        <@ui.textArea
+            id              = "annotationTextArea"
+            name            = "annotation"
+            rows            = 6
+            value           = ((book.annotation)??)?then(book.annotation, "")
+            placeholder     = "Book annotation"
+            error           = (annotationError??)?then(annotationError, "")
+        />
     </div>
 
     <!--Genres-->
     <div class="form-group row mx-auto">
-        <div class="form-control ${(genresError??)?string('is-invalid', '')}">
-            <div class="btn-group" role="group">
-                <#list genres as genre>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="${genre}" type="checkbox" id="${genre}"
-                            <#if book??>${book.genres?seq_contains(genre)?string("checked", "")}</#if>
-                            />
-                            <label class="form-check-label" for="${genre}">${genre}</label>
-                        </div>
-                    </div>
-                </div>
-                </#list>
-            </div>
-        </div>
-        <#if genresError??>
-            <div class="invalid-feedback">
-                ${genresError}
-            </div>
-        </#if>
+        <@ui.checkboxRow
+            collection = genres
+            checkCollection = ((book.genres)??)?then(book.genres, [])
+            error = (genresError??)?then(genresError, "")
+        />
     </div>
 
     <div class="form-group row">
         <!--Publication date-->
         <div class="col">
-            <div class="form-group row">
-                <label class="col-md-4 col-form-label" for="publicationDateInput" >Publication date:</label>
-                <div class="col">
-                    <input class="form-control ${(publicationDateError??)?string('is-invalid', '')}" type="date"
-                           name="publicationDate" id="publicationDateInput"
-                           value="<#if (book.publicationDate)??>${(book.publicationDate)?string('yyyy-MM-dd')}</#if>"
-                    />
-                    <#if publicationDateError??>
-                        <div class="invalid-feedback">
-                            ${publicationDateError}
-                        </div>
-                    </#if>
-                </div>
-            </div>
+            <@ui.labelInputRow
+                inputId             = "publicationDateInput"
+                inputName           = "publicationDate"
+                inputValue          = ((book.publicationDate)??)?then((book.publicationDate)?string('yyyy-MM-dd'), "")
+                inputType           = "date"
+                inputError          = (publicationDateError??)?then(publicationDateError, "")
+                labelText           = "Publication date:"
+                labelMd             = "-md-4"
+            />
         </div>
 
         <!--File Chooser-->

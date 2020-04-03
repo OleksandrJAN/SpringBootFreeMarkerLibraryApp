@@ -207,6 +207,7 @@ public class BookController {
         return "redirect:/books";
     }
 
+
     /*Book Reviews*/
 
     @GetMapping("/books/{book:[\\d]+}/reviews")
@@ -215,6 +216,7 @@ public class BookController {
 
         addAssessmentsToModel(model);
         addBookAndBookReviewsToModel(model, reviewBook);
+        model.addAttribute("reviewAction", "/books/" + reviewBook.getId() + "/reviews");
         return "review/reviewList";
     }
 
@@ -241,9 +243,12 @@ public class BookController {
             }
         }
 
+
+//        return "forward:/books/" + reviewBook.getId() + "/reviews";
         addAssessmentsToModel(model);
         addBookAndBookReviewsToModel(model, reviewBook);
-        addReviewToModel(model, review);
+        model.addAttribute("review", review);
+        model.addAttribute("reviewAction", "/books/" + reviewBook.getId() + "/reviews");
         return "review/reviewList";
     }
 
@@ -257,9 +262,9 @@ public class BookController {
     ) {
         checkCorrectRequest(book, review, currentUser);
 
-        addReviewToModel(model, review);
-        addReviewTextAndSelectedAssessmentToModel(model, review.getText(), review.getAssessment());
+        model.addAttribute("review", review);
         addAssessmentsToModel(model);
+        model.addAttribute("reviewAction", "/books/" + book.getId() + "/reviews/" + review.getId());
         return "review/reviewEditPage";
     }
 
@@ -280,9 +285,9 @@ public class BookController {
             return "redirect:/books/" + book.getId() + "/reviews";
         }
 
-        addReviewToModel(model, currentReview);
-        addReviewTextAndSelectedAssessmentToModel(model, editedReview.getText(), editedReview.getAssessment());
         addAssessmentsToModel(model);
+        model.addAttribute("reviewAction", "/books/" + book.getId() + "/reviews/" + currentReview.getId());
+        model.addAttribute("review", editedReview);
         return "review/reviewEditPage";
     }
 
@@ -325,12 +330,4 @@ public class BookController {
         model.addAttribute("assessments", Assessment.values());
     }
 
-    private void addReviewToModel(Model model, Review review) {
-        model.addAttribute("review", review);
-    }
-
-    private void addReviewTextAndSelectedAssessmentToModel(Model model, String text, Assessment assessment) {
-        model.addAttribute("displayedText", text);
-        model.addAttribute("selectedAssessment", assessment);
-    }
 }

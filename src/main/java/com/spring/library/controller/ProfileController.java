@@ -37,7 +37,8 @@ public class ProfileController {
     public String getUserReviewsPage(@PathVariable("user") User userProfile, Model model) {
         ControllerUtils.isUserProfileExists(userProfile);
 
-        addUserAndUserReviewsToModel(model, userProfile);
+        model.addAttribute("reviews", reviewService.getAllUserReviews(userProfile.getId()));
+        model.addAttribute("userProfile", userProfile);
         return "review/reviewList";
     }
 
@@ -50,9 +51,9 @@ public class ProfileController {
     ) {
         checkCorrectRequest(userProfile, review, currentUser);
 
-        addReviewToModel(model, review);
-        addReviewTextAndSelectedAssessmentToModel(model, review.getText(), review.getAssessment());
+        model.addAttribute("review", review);
         addAssessmentsToModel(model);
+        model.addAttribute("reviewAction", "/users/" + userProfile.getId() + "/reviews/" + review.getId());
         return "review/reviewEditPage";
     }
 
@@ -73,9 +74,9 @@ public class ProfileController {
             return "redirect:/users/" + userProfile.getId() + "/reviews";
         }
 
-        addReviewToModel(model, currentReview);
-        addReviewTextAndSelectedAssessmentToModel(model, editedReview.getText(), editedReview.getAssessment());
+        model.addAttribute("review", editedReview);
         addAssessmentsToModel(model);
+        model.addAttribute("reviewAction", "/users/" + userProfile.getId() + "/reviews/" + currentReview.getId());
         return "review/reviewEditPage";
     }
 
@@ -100,22 +101,8 @@ public class ProfileController {
         reviewService.checkCurrentUserRights(currentUser, userProfile);
     }
 
-    private void addUserAndUserReviewsToModel(Model model, User userProfile) {
-        model.addAttribute("reviews", reviewService.getAllUserReviews(userProfile.getId()));
-        model.addAttribute("userProfile", userProfile);
-    }
-
     private void addAssessmentsToModel(Model model) {
         model.addAttribute("assessments", Assessment.values());
-    }
-
-    private void addReviewToModel(Model model, Review review) {
-        model.addAttribute("review", review);
-    }
-
-    private void addReviewTextAndSelectedAssessmentToModel(Model model, String text, Assessment assessment) {
-        model.addAttribute("displayedText", text);
-        model.addAttribute("selectedAssessment", assessment);
     }
 
 }

@@ -1,4 +1,8 @@
 <#import "/ui/alerts.ftl" as alert>
+<#import "/ui/ui.ftl" as ui>
+<#import "/ui/hidden.ftl" as hidden>
+
+
 
 <#macro reviewCards currUserId isAdmin modificationActionPath>
 <#list reviews as review>
@@ -55,11 +59,17 @@
 
 
 
-<#macro reviewPage action buttonText reviewText="" reviewAssessment="" putAction=false>
+<#macro reviewPage
+    action reviewText reviewAssessment
+    putAction=false
+>
 <form action="${action}" method="post">
-    <input type="hidden" name="_csrf" value="${_csrf.token}" />
+    <@hidden.csrf />
+
     <#if putAction>
-        <input type="hidden" name="_method" value="PUT" />
+        <@hidden.method
+            value = "PUT"
+        />
     </#if>
 
     <#if reviewError??>
@@ -69,7 +79,6 @@
     </#if>
 
     <!--Review Assessment-->
-
     <div class="form-group row">
         <label class="col-md-2 col-form-label" for="selectedAssessment">Review assessment:</label>
         <div class="col">
@@ -95,21 +104,27 @@
 
     <!--Review Text-->
     <div class="form-group row">
-        <label class="col-md-2 col-form-label" for="reviewTextArea">Review text:</label>
+        <div class="col-md-2">
+            <@ui.label
+                text    = "Review text:"
+                forId   = "reviewTextArea"
+            />
+        </div>
         <div class="col">
-            <textarea class="form-control <#if textError??>is-invalid</#if>" name="text" rows="9"
-                      id="reviewTextArea" placeholder="Entry review text"><#if reviewText?has_content>${reviewText}</#if></textarea>
-            <#if textError??>
-                <div class="invalid-feedback">
-                    ${textError}
-                </div>
-            </#if>
+            <@ui.textArea
+                id              = "reviewTextArea"
+                name            = "text"
+                rows            = 9
+                value           = (reviewText?has_content)?then(reviewText, "")
+                placeholder     = "Entry review text"
+                error           = (textError??)?then(textError, "")
+            />
         </div>
     </div>
 
     <!--Submit Button-->
     <div class="form-group">
-        <button class="btn btn-primary" type="submit">${buttonText}</button>
+        <button class="btn btn-primary" type="submit">Save</button>
     </div>
 
 </form>
