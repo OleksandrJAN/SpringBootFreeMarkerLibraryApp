@@ -115,3 +115,32 @@
 </table>
 
 </#macro>
+
+
+<!--CARDS-->
+<#macro card
+    headerLinks
+    bgColor="bg-white"
+>
+
+<div class="form-group">
+    <div class="card ${bgColor}">
+
+        <div class="card-header">
+            <ul class="nav nav-pills card-header-pills">
+                <#list headerLinks as link, text>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${link}">${text}</a>
+                    </li>
+                </#list>
+            </ul>
+        </div>
+
+        <div class="card-body">
+            <#nested>
+        </div>
+
+    </div>
+</div>
+
+</#macro>
