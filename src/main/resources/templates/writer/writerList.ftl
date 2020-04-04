@@ -28,13 +28,6 @@
     <tr>
         <td><a href="/writers/${writer.id}">${writer.firstName}</a></td>
         <td><a href="/writers/${writer.id}">${writer.lastName}</a></td>
-        <#if isAdmin>
-            <td>
-                <@hidden.deleteForm
-                    action = "/writers/${writer.id}"
-                />
-            </td>
-        </#if>
     </tr>
 </#list>
 

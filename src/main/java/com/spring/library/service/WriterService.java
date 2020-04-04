@@ -32,8 +32,10 @@ public class WriterService {
         return writerFromDb != null;
     }
 
-    public void updateWriter(Writer editedWriter) {
-        writerRepo.save(editedWriter);
+    public void updateWriter(Writer dbWriter, Writer editedWriter) {
+        dbWriter.setFirstName(editedWriter.getFirstName());
+        dbWriter.setLastName(editedWriter.getLastName());
+        writerRepo.save(dbWriter);
     }
 
     public void deleteWriter(Writer writer) {

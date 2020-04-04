@@ -26,6 +26,14 @@ public class WriterController {
         return "writer/writerList";
     }
 
+    @GetMapping("/writers/{writer:[\\d]+}")
+    public String getWriterPage(@PathVariable Writer writer, Model model) {
+        ControllerUtils.isWriterExists(writer);
+
+        model.addAttribute("writer", writer);
+        return "writer/writerPage";
+    }
+
 
     @GetMapping("/writers/add")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -55,31 +63,36 @@ public class WriterController {
     }
 
 
-    @GetMapping("/writers/{writer:[\\d]+}")
-    public String getWriterPage(@PathVariable Writer writer, Model model) {
+    @GetMapping("writers/{writer:[\\d]+}/edit")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String getWriterEditPage(@PathVariable Writer writer, Model model) {
         ControllerUtils.isWriterExists(writer);
 
-        model.addAttribute("writer", writer);
-        return "writer/writerPage";
+        model.addAttribute("currentWriter", writer);
+        model.addAttribute("editedWriter", writer);
+        return "writer/writerEditPage";
     }
 
-    @PutMapping("/writers/{writer:[\\d]+}")
+
+    @PutMapping("/writers/{currentWriter:[\\d]+}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String updateWriter(
+            @PathVariable("currentWriter") Writer currentWriter,
             @Valid Writer editedWriter,
             BindingResult bindingResult,
             Model model
     ) {
-        ControllerUtils.isWriterExists(editedWriter);
+        ControllerUtils.isWriterExists(currentWriter);
 
         boolean isBindingResultHasErrors = ControllerUtils.mergeErrorsWithModel(bindingResult, model);
         if (!isBindingResultHasErrors) {
-            writerService.updateWriter(editedWriter);
-            model.addAttribute("writerUpdated", "Writer updated");
+            writerService.updateWriter(currentWriter, editedWriter);
+            return "redirect:/writers/" + currentWriter.getId();
         }
 
-        model.addAttribute("writer", editedWriter);
-        return "writer/writerPage";
+        model.addAttribute("currentWriter", currentWriter);
+        model.addAttribute("editedWriter", editedWriter);
+        return "writer/writerEditPage";
     }
 
     @DeleteMapping("/writers/{writer:[\\d]+}")
@@ -93,4 +106,11 @@ public class WriterController {
     }
 
 
+    @GetMapping("/writers/{writer:[\\d]+}/books")
+    public String getWriterBooksPage(@PathVariable Writer writer, Model model) {
+        ControllerUtils.isWriterExists(writer);
+
+        model.addAttribute("books", writer.getBooks());
+        return "writer/writerBooks";
+    }
 }
