@@ -16,11 +16,6 @@
         <td>
             <#list user.roles as role>${role}<#sep>, </#list>
         </td>
-        <td>
-            <@hidden.deleteForm
-                action = "/users/${user.id}"
-            />
-        </td>
     </tr>
 </#list>
 
