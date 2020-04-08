@@ -1,18 +1,15 @@
 <#import "/parts/common.ftl" as c>
-<#import "reviewMacros.ftl" as r>
+<#import "reviewForm.ftl" as reviewForm>
 
 <#include "/parts/security.ftl">
 
 <@c.page>
 
-
 <!--Review Edit Page-->
-<@r.reviewPage
+<@reviewForm.reviewPage
+    review              = review
     action              = reviewAction
-    reviewText          = review.text
-    reviewAssessment    = review.assessment
     putAction           = true
 />
-
 
 </@c.page>

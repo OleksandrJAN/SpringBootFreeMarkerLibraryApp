@@ -9,22 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-
 @Service
 public class ReviewService {
 
     @Autowired
     private ReviewRepo reviewRepo;
 
-
-    public List<Review> getAllBookReviews(Long bookId) {
-        return reviewRepo.findByBook_Id(bookId);
-    }
-
-    public List<Review> getAllUserReviews(Long userId) {
-        return reviewRepo.findByAuthor_Id(userId);
-    }
 
     public boolean addNewReview(Long userId, Long bookId, Review review) {
         Review reviewFromUser = reviewRepo.findByAuthor_IdAndBook_Id(userId, bookId);
@@ -45,7 +35,7 @@ public class ReviewService {
     }
 
 
-    public void deleteUserReview(Review review){
+    public void deleteUserReview(Review review) {
         reviewRepo.delete(review);
     }
 
@@ -69,14 +59,11 @@ public class ReviewService {
     }
 
     private boolean isReviewBelongsUser(Long userId, Review review) {
-        List<Review> userReviews = reviewRepo.findByAuthor_Id(userId);
-        return userReviews.contains(review);
+        return review.getAuthor().getId().equals(userId);
     }
 
 
-
     public void checkBookContainsReview(Book book, Review review) {
-        // check that userProfile.reviews contains review
         boolean isReviewBelongsBook = isReviewBelongsBook(book.getId(), review);
         if (!isReviewBelongsBook) {
             String message = "book " + book.getId() + " does not has review " + review.getId();
@@ -85,7 +72,6 @@ public class ReviewService {
     }
 
     private boolean isReviewBelongsBook(Long bookId, Review review) {
-        List<Review> bookReviews = reviewRepo.findByBook_Id(bookId);
-        return bookReviews.contains(review);
+        return review.getBook().getId().equals(bookId);
     }
 }
