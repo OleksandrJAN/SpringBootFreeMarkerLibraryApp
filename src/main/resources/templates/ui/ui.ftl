@@ -144,3 +144,51 @@
 </div>
 
 </#macro>
+
+
+<!--DROP LIST-->
+<#macro dropList
+    mapCollection selected name id
+    error="" isSelectedDisabled=false
+>
+<select class="custom-select <#if error?has_content>is-invalid</#if>" name="${name}" id="${id}" >
+    <option selected  value="${selected.value}" ${(isSelectedDisabled)?then("disabled", "")} >
+        ${selected.text}
+    </option>
+
+    <#list mapCollection as value, text>
+        <option value="${value}">${text}</option>
+    </#list>
+</select>
+<#if error?has_content>
+    <div class="invalid-feedback">
+        ${error}
+    </div>
+</#if>
+
+</#macro>
+
+
+<!--FILE CHOOSER-->
+<#macro fileChooser
+    name id prependId prependText
+    error="" accept="image/*"
+>
+<div class="input-group">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="${prependId}">${prependText}</span>
+    </div>
+    <div class="custom-file">
+        <label class="custom-file-label" for="${id}">Choose file</label>
+        <input class="custom-file-input" type="file" name="${name}"
+               accept="${accept}" id="${id}" aria-describedby="${prependId}"
+        />
+    </div>
+</div>
+<#if error?has_content>
+    <div class="invalid-feedback d-block">
+        ${error}
+    </div>
+</#if>
+
+</#macro>
