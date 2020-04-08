@@ -7,17 +7,16 @@
 <@c.page>
 
 <#list books as book>
-    <#assign links = {
-        "/books/" + book.id : book.bookName,
-        "/books/" + book.id + "/reviews" : "Reviews"
-    }>
-
     <@ui.card
-        headerLinks = links
+        headerLinks = {
+            "/books/" + book.id                 : book.bookName,
+            "/books/" + book.id + "/reviews"    : "Reviews"
+        }
     >
-        <p class="card-text">${book.annotation}</p>
-    </@ui.card>
 
+    <p class="card-text">${book.annotation}</p>
+
+    </@ui.card>
 <#else>
     <div class="form-group row">
         <label class="col col-form-label">No books</label>

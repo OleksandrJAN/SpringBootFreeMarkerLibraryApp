@@ -52,6 +52,7 @@ public class BookService {
 
     public boolean addNewBook(Book book) {
         if (isBookExists(book)) {
+            deletePosterFile(book.getFilename());
             return false;
         }
 

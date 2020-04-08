@@ -34,7 +34,7 @@
         </ul>
 
         <#if currentUser??>
-            <div class="navbar-text mr-2">${name}</div>
+            <div class="navbar-text mr-2">${currentUser.username}</div>
             <a class="nav-link" href="/settings">Settings</a>
             <@hidden.logout />
         </#if>

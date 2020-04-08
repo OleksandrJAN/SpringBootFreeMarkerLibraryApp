@@ -5,7 +5,6 @@
 <#if known>
     <#assign
         currentUser = Session.SPRING_SECURITY_CONTEXT.authentication.principal
-        name = currentUser.getUsername()
         isAdmin = currentUser.isAdmin()
     >
 </#if>

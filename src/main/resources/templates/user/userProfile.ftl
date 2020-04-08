@@ -20,7 +20,7 @@
 />
 
 <!--User Roles-->
-<#if isAdmin>
+<#if isAdmin && userProfile != currentUser>
     <hr/>
     <form action="/users/${userProfile.id}/roles" method="post">
         <@hidden.csrf />

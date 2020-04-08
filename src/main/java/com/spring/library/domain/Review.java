@@ -29,11 +29,6 @@ public class Review {
     private Assessment assessment;
 
 
-    public String getAuthorName() {
-        return author.getUsername();
-    }
-
-
     public Long getId() {
         return id;
     }

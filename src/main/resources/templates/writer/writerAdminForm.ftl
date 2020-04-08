@@ -47,7 +47,7 @@
     <div class="form-group row mx-auto">
         <button class="btn btn-primary" type="submit">Save</button>
         <#assign backLink = ((writer.id)??)?then("/writers/${writer.id}","/writers")>
-        <a class="btn btn-primary align-self-end ml-auto" href="${backLink}" role="button">Back</a>
+        <a class="btn btn-primary ml-auto" href="${backLink}" role="button">Back</a>
     </div>
 
 </form>

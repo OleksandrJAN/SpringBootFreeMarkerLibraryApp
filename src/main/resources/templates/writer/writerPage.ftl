@@ -37,10 +37,12 @@
 <div class="form-group row mx-auto">
     <a class="btn btn-primary" href="${writer.id}/books" role="button">Books</a>
     <#if isAdmin>
-        <a class="btn btn-warning mx-1" href="${writer.id}/edit" role="button">Edit</a>
-        <@hidden.deleteForm
-            action = "/writers/${writer.id}"
-        />
+        <a class="btn btn-warning ml-1" href="${writer.id}/edit" role="button">Edit</a>
+        <div class="ml-auto">
+            <@hidden.deleteForm
+                action = "/writers/${writer.id}"
+            />
+        </div>
     </#if>
 </div>
 
