@@ -35,7 +35,7 @@
                     name        = "annotation"
                     rows        = 6
                     value       = book.annotation
-                    readonly    =true
+                    readonly    = true
                 />
             </div>
         </div>
@@ -71,14 +71,16 @@
             labelMd             = "-md-3"
         />
 
-        <!--Reviews-->
+        <!--Actions-->
         <div class="form-group row mx-auto">
             <a class="btn btn-primary" href="${book.id}/reviews" role="button">Reviews</a>
             <#if isAdmin>
-                <a class="btn btn-warning mx-1" href="${book.id}/edit" role="button">Edit</a>
-                <@hidden.deleteForm
-                    action = "/books/${book.id}"
-                />
+                <a class="btn btn-warning ml-1" href="${book.id}/edit" role="button">Edit</a>
+                <div class="ml-auto">
+                    <@hidden.deleteForm
+                        action = "/books/${book.id}"
+                    />
+                </div>
             </#if>
         </div>
     </div>
